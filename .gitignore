@@ -33,3 +33,6 @@ _apply*.py
 _shot*.mjs
 data/build/
 data/raw/
+# 截图脚本产生的 Edge 用户数据目录（每个 60MB+，绝不入库）
+web/_*
+web/_*.html

@@ -705,7 +705,7 @@
   </div>
   <div id="meta-r">
     <div class="num">POEMS <b id="tot">1468</b> · 712—770</div>
-    <div id="search"><span id="qc"></span><input id="q" placeholder="意象 / 诗题" autocomplete="off"></div>
+    <div id="search"><span id="qc"></span><input id="q" placeholder="意象/诗题 · 空格分隔可多选" autocomplete="off"></div>
   </div>
 </header>
 
@@ -2392,6 +2392,22 @@ function stepIntro(t){
 
 /* ============ 状态 ============ */
 var hover=null, selected=null, query=null, catFilter=null;
+/* 检索支持多选：空格 / 逗号 / 顿号 / 分号 分隔，命中取并集。
+   原来 query 是个字符串，直接 indexOf 比对；现在多一层 qTerms。 */
+var qTerms=[];
+function parseTerms(s){
+  var out=[], seen={};
+  String(s||'').split(/[\s,，、;；|]+/).forEach(function(w){
+    w=w.trim(); if(w && !seen[w]){ seen[w]=1; out.push(w); }
+  });
+  return out;
+}
+function syncTerms(){ qTerms=parseTerms(query); }
+function hitAny(p){
+  if(!qTerms.length||!p||!p.all) return false;
+  for(var i=0;i<qTerms.length;i++){ if(p.all.indexOf(qTerms[i])>=0) return true; }
+  return false;
+}
 var constellation=null;                 // 选中诗时，以其首意象拉出星座
 var periodHL=null;                      // 生平某期 → 星海高亮
 var formFilter=null;                    // 体裁筛选
@@ -2580,9 +2596,9 @@ function render(t){
     if(catFilter&&q0.d!==catFilter) dim=true;
     if(formFilter&&q0.f!==formFilter) dim=true;
     // 点了意象：不做压暗，改为命中者整片亮起来
-    var hitByQuery = query && q0.all.indexOf(query)>=0;
+    var hitByQuery = hitAny(q0);
     if(dim){a*= .09; size*=.7;}
-    if(selected && !query && !dim && !linked(q0) && q0!==selected){ a*=.30; size*=.8; }
+    if(selected && !qTerms.length && !dim && !linked(q0) && q0!==selected){ a*=.30; size*=.8; }
     if(hitByQuery && !dim){
       var qp=Math.sin(t*0.0032*q0.sp+q0.ph);
       a=Math.min(1.30, a*1.12+0.30+0.18*qp);
@@ -2656,8 +2672,8 @@ function render(t){
   }
 
   /* 意象星座：全部含该词的诗彼此相连 —— 每条线的意义就是"两首都含这个字" */
-  if(query){
-    if(_qWord!==query){ _qEdges=buildQueryGraph(query); _qWord=query; }
+  if(qTerms.length===1){
+    if(_qWord!==qTerms[0]){ _qEdges=buildQueryGraph(qTerms[0]); _qWord=qTerms[0]; }
     if(_qEdges){
       ctx.globalAlpha=1;
       ctx.setLineDash([]);
@@ -2674,7 +2690,7 @@ function render(t){
     }
   }
   /* 星座：只在"看得见的近邻星"之间连线，且限制单段长度 */
-  if(!query && linkMode && selected && selected._q){
+  if(!qTerms.length && linkMode && selected && selected._q){
     ctx.globalAlpha=1;
     var so=selected._q;
     var maxEdge=Math.min(W,H)*0.26;
@@ -2682,7 +2698,7 @@ function render(t){
     for(var m=0;m<pts.length;m++){
       var pm=pts[m];
       if(pm===selected || !pm._q) continue;
-      var hit=query?(pm.all.indexOf(query)>=0):linked(pm);
+      var hit=qTerms.length?hitAny(pm):linked(pm);
       if(!hit) continue;
       var qm=pm._q;
       if(qm.sx<-30||qm.sx>W+30||qm.sy<-30||qm.sy>H+30) continue;
@@ -3318,7 +3334,7 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 var card=document.getElementById('card');
 function select(p){
   document.body.classList.add('cardon');
-  selected=p; query=null; if(periodHL!==null){ periodHL=null; phl.classList.remove('on'); }
+  selected=p; if(periodHL!==null){ periodHL=null; phl.classList.remove('on'); }
   constellation = pickConstellation(p);
   linkMode='image';
   document.getElementById('c-note').textContent=p.note||'';
@@ -3377,7 +3393,7 @@ function select(p){
   p.k.forEach(function(w){
     var s=document.createElement('span'); s.textContent=w;
     s.onclick=function(){
-      query=(query===w?null:w);
+      query=(query===w?null:w); syncTerms();
       [].forEach.call(kw.children,function(x){x.classList.toggle('on',x.textContent===query);});
       document.getElementById('q').value=query||'';
       updCount();
@@ -3439,7 +3455,7 @@ function select(p){
 }
 function closeCard(){
   document.body.classList.remove('cardon');
-  card.classList.remove('on'); selected=null; query=null; constellation=null;
+  card.classList.remove('on'); selected=null; constellation=null;
   hover=null;
   if(typeof tip!=='undefined' && tip) tip.classList.remove('on');
   document.getElementById('q').value=''; updCount();
@@ -3977,10 +3993,10 @@ function renderDimVals(){
 }
 function applyDim(d,v){
   if(d==='image'||d==='emotion'){
-    query=(query===v?null:v); formFilter=null;
+    query=(query===v?null:v); syncTerms(); formFilter=null;
     document.getElementById('q').value=query||'';
   } else if(d==='form'){
-    formFilter=(formFilter===v?null:v); query=null;
+    formFilter=(formFilter===v?null:v); query=null; syncTerms();
     document.getElementById('q').value='';
   } else if(d==='period'){
     if(periodHL===Number(v)){ clearPeriod(); } else { setPeriod(Number(v)); }
@@ -4023,7 +4039,7 @@ function syncLegend(){
 
 /* ============ 检索 ============ */
 var qEl=document.getElementById('q'), qc=document.getElementById('qc');
-qEl.addEventListener('input',function(){ audCue('type'); query=qEl.value.trim()||null; updCount(); sayZero(); });
+qEl.addEventListener('input',function(){ audCue('type'); query=qEl.value.trim()||null; syncTerms(); updCount(); sayZero(); });
 /* 回车直接打开最匹配的一首：检索不该只亮灯，要能走进去 */
 qEl.addEventListener('keydown',function(e){
   if(e.key!=='Enter') return;
@@ -4046,32 +4062,35 @@ function sayZero(){
   var el=document.getElementById('qc');
   if(!el) return;
   var n=0;
-  if(query){ for(var i=0;i<pts.length;i++){ if(pts[i].all.indexOf(query)>=0) n++; } }
-  if(query && n===0){ el.textContent='没有一首含有「'+query+'」'; el.style.color='#c9a227'; }
+  if(qTerms.length){ for(var i=0;i<pts.length;i++){ if(hitAny(pts[i])) n++; } }
+  if(qTerms.length && n===0){ el.textContent='没有一首含有「'+qTerms.join('、')+'」'; el.style.color='#c9a227'; }
   else if(el.style.color){ el.style.color=''; }
 }
-qEl.addEventListener('keydown',function(e){ if(e.key==='Escape'){qEl.value='';query=null;updCount();} });
+qEl.addEventListener('keydown',function(e){ if(e.key==='Escape'){qEl.value='';query=null;syncTerms();updCount();} });
 function matchCount(){
-  if(!query&&!catFilter&&!formFilter&&periodHL===null) return N;
+  if(!qTerms.length&&!catFilter&&!formFilter&&periodHL===null) return N;
   var n=0;
   for(var i=0;i<pts.length;i++){
     var p=pts[i];
     if(catFilter&&p.d!==catFilter) continue;
     if(formFilter&&p.f!==formFilter) continue;
     if(periodHL!==null&&p.pd!==periodHL) continue;
-    if(query&&p.all.indexOf(query)<0) continue;
+    if(qTerms.length&&!hitAny(p)) continue;
     n++;
   }
   return n;
 }
 function updCount(){
   var n=matchCount();
-  qc.textContent=(query||catFilter||formFilter||periodHL!==null)? String(n) : '';
+  qc.textContent=(qTerms.length||catFilter||formFilter||periodHL!==null)? String(n) : '';
   document.getElementById('tot').textContent=N;
   var phlEl=document.getElementById('phl');
-  if(query){
-    document.getElementById('phl-n').textContent='意象';
-    document.getElementById('phl-y').textContent = n>90      ? ('「'+query+'」· '+n+' 首 · 命中过多，只点亮不连线')      : ('「'+query+'」· '+n+' 首 · 连线＝两首都含此字');
+  if(qTerms.length){
+    var _q=qTerms.join('、');
+    document.getElementById('phl-n').textContent=(qTerms.length>1?'意象 ×'+qTerms.length:'意象');
+    document.getElementById('phl-y').textContent = (n>90||qTerms.length>1)
+      ? ('「'+_q+'」· '+n+' 首 · 只点亮，不连线')
+      : ('「'+_q+'」· '+n+' 首 · 连线＝两首都含此字');
     phlEl.classList.add('on');
   } else if(periodHL===null && !focusSet){
     phlEl.classList.remove('on');
@@ -4432,7 +4451,7 @@ function setLinkMode(k){
 /* --- 时期高亮 --- */
 var phl=document.getElementById('phl');
 function setPeriod(pi){
-  periodHL=pi; constellation=null; selected=null; query=null;
+  periodHL=pi; constellation=null; selected=null; query=null; syncTerms();
   document.getElementById('q').value=''; updCount();
   document.getElementById('card').classList.remove('on');
   var P0=PERIODS[pi]||{n:'',y:''};
@@ -4454,7 +4473,7 @@ function setFocus(label, ids, sub){
   document.getElementById('phl-n').textContent=label;
   document.getElementById('phl-y').textContent=sub||(ids.length+' 首');
   phl.classList.add('on');
-  selected=null; query=null; constellation=null;
+  selected=null; query=null; syncTerms(); constellation=null;
   document.getElementById('q').value=''; updCount();
   document.getElementById('card').classList.remove('on');
   if(!roamOn){ fly={yaw:cam.yaw,pitch:cam.pitch,zoom:1.0}; autoSpin=true; }
