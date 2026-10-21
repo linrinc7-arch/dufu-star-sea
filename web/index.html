@@ -2780,6 +2780,7 @@ function render(t){
   ctx.globalCompositeOperation='source-over';
   if(viewMode==='sky') applyBloom(0.125);   // 必须每帧，隔帧会造成奇偶帧亮度差（高频闪烁）
   if(viewMode==='galaxy') applyBloom(0.17);
+  drawCoreHint();                      /* 提示画在泛光之后，字才不糊 */
   if(vigCache) ctx.drawImage(vigCache,0,0,W,H);
   _prof.post+=performance.now()-_pt2;
   _prof.n++;
@@ -3186,7 +3187,7 @@ window.addEventListener('pointermove',function(e){
   if(roamLocked && roamOn){                // 锁鼠：像第一人称那样转头，转多少给多少
     cam.yaw += (e.movementX||0)*0.0010;
     cam.pitch = Math.max(-1.05,Math.min(1.05,cam.pitch + (e.movementY||0)*0.0010));
-    roamClampView();
+
     lastMove=performance.now();
     return;
   }
@@ -3198,7 +3199,7 @@ window.addEventListener('pointermove',function(e){
   var SENS=roamOn?0.0013:0.0026;   /* 轨道拖拽也放慢：0.0042 时 40px 就把星海推走 200px，看着像“颜色变浅” */
   cam.yaw=drag.yaw+dx*SENS;
   cam.pitch=Math.max(roamOn?-1.05:-1.25,Math.min(roamOn?1.05:1.25,drag.pitch+dy*SENS));
-  if(roamOn && roamClampView()){ drag.yaw=cam.yaw; drag.pitch=cam.pitch; }
+
   lastMove=performance.now();
 });
 window.addEventListener('pointerup',function(e){
@@ -3596,32 +3597,28 @@ function roamViewLimit(){
   var lim=Math.atan(0.95/Math.max(0.45,r))+0.12;
   return Math.max(0.30, Math.min(0.80, lim));
 }
-function roamClampView(){
-  if(!roamOn) return false;
-  var r=roamRadius();
-  if(r<0.70) return false;                    // 贴着银心：那里"朝向银心"本身没有意义，硬掰只会让视角乱转
+/* 视线离开星海时，不再把镜头硬掰回来——那会让人想往外飞时被"拽"回去，
+   W 变成往回飞。改成：只提示银心在哪个方向，方向盘始终在人手里。 */
+function coreAngle(){
+  var r=roamRadius(); if(r<1e-3) return null;
   var cp=Math.cos(cam.pitch);
   var fx=Math.sin(cam.yaw)*cp, fy=Math.sin(cam.pitch), fz=Math.cos(cam.yaw)*cp;
   var gx=-cam.px/r, gy=-cam.py/r, gz=-cam.pz/r;
   var dot=fx*gx+fy*gy+fz*gz;
-  if(dot>0.99995) return false;
-  var ang=Math.acos(Math.max(-1,Math.min(1,dot)));
-  var lim=roamViewLimit();
-  if(ang<=lim) return false;
-  /* 沿大圆把视线压回 lim：银心始终留在画面里 */
-  var ux=gx-dot*fx, uy=gy-dot*fy, uz=gz-dot*fz;
-  var ul=Math.sqrt(ux*ux+uy*uy+uz*uz);
-  if(ul<1e-6) return false;
-  ux/=ul; uy/=ul; uz/=ul;
-  /* 软回拉：每次只走超出部分的 35%，几帧内收敛，不会"啪"一下把镜头掰过去 */
-  /* 软回拉：每次只收回超出部分的 35%，几帧内收敛，不会一下把镜头掰过去 */
-  var tgt=lim+(ang-lim)*0.65;
-  var cc=Math.cos(tgt), ss=Math.sin(tgt);
-
-  var nx=cc*fx+ss*ux, ny=cc*fy+ss*uy, nz=cc*fz+ss*uz;
-  cam.yaw=Math.atan2(nx,nz);
-  cam.pitch=Math.max(-1.25,Math.min(1.25,Math.asin(Math.max(-1,Math.min(1,ny)))));
-  return true;
+  return {ang:Math.acos(Math.max(-1,Math.min(1,dot))), r:r,
+          lx:(gx*Math.cos(cam.yaw)-gz*Math.sin(cam.yaw))};
+}
+function drawCoreHint(){
+  if(!roamOn) return;
+  var a=coreAngle(); if(!a || a.ang<0.9) return;
+  var side=a.lx>=0?'右':'左';
+  var txt=(a.ang>2.3?'银心在身后':'银心在'+side+'后方')+' · '+a.r.toFixed(1)+' 单位 · V 归位';
+  ctx.globalAlpha=Math.min(1,(a.ang-0.9)*1.5);
+  ctx.font='11px "Helvetica Neue",Arial,sans-serif';
+  ctx.fillStyle='rgba(201,162,39,.8)';
+  ctx.textAlign='center';
+  ctx.fillText(txt, CX, CY+72);
+  ctx.globalAlpha=1; ctx.textAlign='left';
 }
 function updRoamRead(){
   var d=document.getElementById('roamdist'), s=document.getElementById('roamspd');
@@ -3782,7 +3779,7 @@ function updateRoam(dt){
     var sc2=ROAM_MIN_R/Math.max(1e-4,R);
     cam.px*=sc2; cam.py*=sc2; cam.pz*=sc2;
   }
-  if(roamClampView()) GALKEY=null;        // 视野被拉回：背景层跟着重算
+
   roamFrame++;
   if((roamFrame&3)===0) updRoamRead();
   if(ax||az||ay||rollIn) lastMove=performance.now();
@@ -5073,7 +5070,7 @@ window.__DUFU_DEBUG={
   roamSetPos:function(x,y,z){ cam.px=x; cam.py=y; cam.pz=z; GALKEY=null; render(0); },
   roamKey:function(k,down){ roamKeys[k]=!!down; return roamKeys; },
   roamViewLimit:function(){ return roamViewLimit(); },
-  roamClampView:function(){ return roamClampView(); },
+  coreAngle:function(){ return coreAngle(); },
   sparks:function(){ return SPARK?SPARK.n:0; },
   skipIntro:function(){ INTRO.on=false; cam.dist=INTRO.to; GALKEY=null; render(0); return cam.dist; },
   tick:function(n,dt){ for(var i=0;i<n;i++){ if(roamOn) updateRoam(dt||0.0166); } render(0); return roamRadius(); },
