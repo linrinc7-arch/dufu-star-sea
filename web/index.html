@@ -1949,7 +1949,7 @@ function drawGalaxyBack(t){
   ctx.globalAlpha=1;
   if(fresh) window.__GDBG.fresh++;
   window.__GDBG.draws++; window.__GDBG.lastW=target.width; window.__GDBG.lastH=target.height;
-  var ex=1-0.10*Math.abs(Math.sin(cam.pitch));
+  var ex=roamOn?(1-0.10*Math.abs(Math.sin(cam.pitch))):1;   /* 只在遨游里按俯仰归一；轨道里拖视角不该改亮度 */
   ctx.globalAlpha=ex<0.68?0.68:ex;
   ctx.drawImage(target,0,0,W,H);
   ctx.globalAlpha=1;
@@ -3195,7 +3195,7 @@ window.addEventListener('pointermove',function(e){
   drag.moved+=Math.abs(dx)+Math.abs(dy);
   /* 飞行时的环视比轨道视角慢一半：0.0042 rad/px 在飞船里是"甩一下天就黑了"，
      参考站自己也是两套灵敏度（0.005 轨道 / 0.0024 自由飞）。 */
-  var SENS=roamOn?0.0013:0.0042;
+  var SENS=roamOn?0.0013:0.0026;   /* 轨道拖拽也放慢：0.0042 时 40px 就把星海推走 200px，看着像“颜色变浅” */
   cam.yaw=drag.yaw+dx*SENS;
   cam.pitch=Math.max(roamOn?-1.05:-1.25,Math.min(roamOn?1.05:1.25,drag.pitch+dy*SENS));
   if(roamOn && roamClampView()){ drag.yaw=cam.yaw; drag.pitch=cam.pitch; }
@@ -3971,7 +3971,7 @@ function dimValues(d){
 }
 var dimvals=document.getElementById('dimvals');
 function isActive(d,v){
-  if(d==='image'||d==='emotion') return query===v;
+  if(d==='image'||d==='emotion') return qTerms.indexOf(v)>=0;
   if(d==='form') return formFilter===v;
   if(d==='period') return periodHL===Number(v);
   if(d==='theme') return catFilter===v;
@@ -3993,7 +3993,11 @@ function renderDimVals(){
 }
 function applyDim(d,v){
   if(d==='image'||d==='emotion'){
-    query=(query===v?null:v); syncTerms(); formFilter=null;
+    /* 多选：点一个加一个，再点取消；并集 */
+    var cur=parseTerms(query), at=cur.indexOf(v);
+    if(at>=0) cur.splice(at,1); else cur.push(v);
+    query=cur.length?cur.join(' '):null;
+    syncTerms(); formFilter=null;
     document.getElementById('q').value=query||'';
   } else if(d==='form'){
     formFilter=(formFilter===v?null:v); query=null; syncTerms();
