@@ -1926,11 +1926,11 @@ function drawGalaxyBack(t){
     /* 大位移立刻重建；小位移最多每 220ms 重建一次（自动缓慢旋转时不再每帧重画 6 万点） */
     fresh=(!kk)||kk.roam||kk.dist!==cam.dist||kk.zoom!==cam.zoom||kk.roll!==cam.roll||big>7.0||
       (big>2.0 && now-(kk.t||0)>2400)||
-      (kk.stride===3 && big<0.5 && now-(kk.t||0)>180);   // 停下后补一帧全量，密度不留在抽样档
+      (kk.stride>1 && big<0.5 && now-(kk.t||0)>180);   /* 停下后补一帧全量（现在抽稀档是 2，不再只认 3） */
   }
   if(fresh){
     var c=target.getContext('2d');
-    var stride=GAL_STRIDE_OVERRIDE||(roamOn?2:((big>18)?3:1));   /* 固定档：跨半径时不会突然变稀 */
+    var stride=GAL_STRIDE_OVERRIDE||(roamOn?2:(big>600?2:1));   /* 轨道里基本不抽稀：原来 big>18（约7px）就抽成1/3，一动就变暗 */
     RSCALE=RS;
     c.setTransform(1,0,0,1,0,0);
     c.globalCompositeOperation='source-over';
@@ -2019,7 +2019,7 @@ function drawGalaxyPoints(c,t,stride){
     var s0=start[b], s1=start[b+1];
     if(s1<=s0) continue;
     c.fillStyle=GAL_COL[(b/8)|0];
-    c.globalAlpha=GAL_ALPHA[b&7];
+    var ga0=GAL_ALPHA[b&7]*(stride>1?1.45:1)*(RSCALE<1?1.25:1); c.globalAlpha=ga0>1?1:ga0;   /* 抽稀/半分辨率时补亮度 */
     for(var q=s0;q<s1;q+=stride){
       var i=order[q];
       var x=X[i]-ox, z=Z[i]-oz, y=Y[i]-oy;
