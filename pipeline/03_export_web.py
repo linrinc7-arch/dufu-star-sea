@@ -81,13 +81,13 @@ for p in sf['poems']:
     src = poems[i]
     words = list(feat['counts'][i].keys())
     out['poems'].append({
-        'i': i, 't': p['title'], 'f': p['form'], 'n': p['n'],
+        'i': i, 't': src['title'], 'f': src['form'], 'n': src['n_chars'],
         'x': p['x'], 'y': p['y'], 'z': p['z'], 'c': p['c'],
         'd': p['dom'], 'l': p['dom_lift'], 'k': p['top'][:4],
         'w': words,
         'wc': {k: v for k, v in list(feat['counts'][i].items())[:24]},
         'L': src['lines'],
-        'hot': 1 if p['title'] in HOT else 0,
+        'hot': 1 if src['title'] in HOT else 0,
         'note': (NOTE.get(p['title'], '')
                  if (NOTE_COUNT.get(p['title'], 0) == 1
                      or (p['title'] in HOT and not NOTE_SEEN.setdefault(p['title'], p['id']) != p['id']))

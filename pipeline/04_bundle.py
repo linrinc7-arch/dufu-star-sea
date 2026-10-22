@@ -8,7 +8,8 @@ ART = os.path.join(WEB, 'art', 'opt')
 OUT = os.path.join(BASE, '杜诗星海.html')
 
 # 构建前先做语法体检：外链数据脚本一旦有语法错误，整块解析会静默失效
-for _f in ('analysis.js', 'shiyun.js', 'collation.js', 'gloss.js', 'yiyi.js', 'yiyi2.js'):
+for _f in ('analysis.js', 'shiyun.js', 'collation.js', 'gloss.js', 'gloss2.js', 'annot.js', 'imagery.js',
+           'shiyun_good.js', 'life_data.js', 'life.js', 'yiyi.js', 'yiyi2.js'):
     _p = os.path.join(WEB, _f)
     if os.path.exists(_p):
         _r = subprocess.run(['node', '--check', _p], capture_output=True, text=True)
@@ -52,6 +53,14 @@ html = html.replace('<script src="collation.js"></script>', '<script>' + collati
 html = html.replace('<script src="gloss.js"></script>', '<script>' + gloss + '</script>')
 html = html.replace('<script src="yiyi.js"></script>', '<script>' + yiyi + '</script>')
 html = html.replace('<script src="yiyi2.js"></script>', '<script>' + yiyi2 + '</script>')
+for _f, _var in (('gloss2.js', 'GLOSS2'), ('annot.js', 'ANNOT'), ('imagery.js', 'IMAGERY'),
+                 ('shiyun_good.js', 'SHIYUN_GOOD'), ('life_data.js', 'LIFE_DATA'),
+                 ('life.js', 'renderLifePanel')):
+    _p2 = os.path.join(WEB, _f)
+    if os.path.exists(_p2):
+        html = html.replace('<script src="%s"></script>' % _f,
+                            '<script>' + open(_p2, encoding='utf-8').read() + '</script>')
+        assert ('window.%s' % _var) in html, _f
 assert 'window.ANALYSIS' in html
 assert 'window.SHIYUN' in html
 assert 'window.DUFU=' in html and 'window.ART_DATA=' in html

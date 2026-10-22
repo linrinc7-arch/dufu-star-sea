@@ -4,7 +4,7 @@ import os, json, csv
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 B = os.path.join(BASE, 'data', 'build')
-OUT = os.path.join(BASE, '交付', '数据')
+OUT = os.path.join(BASE, '交付', '04_数据说明')
 os.makedirs(OUT, exist_ok=True)
 
 poems = json.load(open(os.path.join(B, 'dufu_poems.json'), encoding='utf-8'))

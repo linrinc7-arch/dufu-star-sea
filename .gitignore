@@ -1,44 +1,36 @@
-# —— 大件产物不进版本库（要还原请用 迭代/快照/）——
+# —— 生成物与大件不入库 ——
 *.zip
-web/art/
-交付/杜诗星海_全图版/
-交付/杜诗星海.html
 杜诗星海.html
-迭代/截图/
-迭代/快照/
-work/
-refs/
+web/art/
 docs/*.docx
+data/build/
+data/raw/
+
+# 交付目录：只收小件（正式作品 html / 两份说明 / 数据表 / 说明），
+# 280 MB 的 05_全图库版 与 zip 走 Release，不进版本库
+交付/*
+!交付/00_交付清单.md
+!交付/01_作品_杜诗星海.html
+!交付/02_技术方法说明.docx
+!交付/03_经典文本关联说明.docx
+!交付/04_数据说明/
+!交付/使用说明.txt
+
+# 运行/截图产生的临时物
 *.png
 *.jpg
 *.jpeg
 *.gif
 *.ico
 *_prof*/
-.f1/
-.p3/
-.qv1/
-.r1/
-.r2/
-.r3/
 __pycache__/
 *.pyc
-_smoke.html
-_s98_*.html
-_shot_*.html
 _tmp_*
-_lit_*
-_r1*
-_apply*.py
-_shot*.mjs
-data/build/
-data/raw/
-# 截图脚本产生的 Edge 用户数据目录（每个 60MB+，绝不入库）
+_shot_*
 web/_*
-web/_*.html
 
-# 已删除的生成物（2026-10-21 整理）
-评审/
-refs/
+# 已废弃的目录（2026-10-22 整理时删除，勿再建）
 work/
-*.zip
+refs/
+迭代/
+作品_全图库版/

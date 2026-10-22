@@ -84,25 +84,94 @@
   #search input::placeholder{color:#a09a8c}
   #qc{font-size:var(--t1);color:var(--gold);letter-spacing:.1em;min-width:28px;text-align:left}
   #search:focus-within{border-bottom-color:rgba(201,162,39,.55)}
+  /* 检索框默认收起（右上角只剩计数），按 / 或 Ctrl+K 唤出；有词时保持可见 */
+  #search{opacity:0;pointer-events:none;transition:opacity .35s}
+  body.searching #search,#search:focus-within{opacity:1;pointer-events:auto}
   #search input:focus::placeholder{color:#a09a8c}
 
   /* ---------- 左侧竖排导航 ---------- */
-  #side{position:fixed;left:38px;top:50%;transform:translateY(-50%);z-index:12;
-    display:flex;flex-direction:column;gap:30px}
+  #side{position:fixed;left:26px;top:50%;transform:translateY(-50%);z-index:14;
+    display:flex;flex-direction:column;gap:14px;padding:16px 16px 16px 12px;border-radius:2px;
+    background:radial-gradient(120% 90% at 0% 50%,rgba(4,5,10,.78) 0%,rgba(4,5,10,.42) 58%,rgba(4,5,10,0) 100%)}
   .sb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:none;
     opacity:1;min-width:44px;min-height:44px;transition:opacity .4s,transform .4s}
-  .sb:hover,.sb.on{opacity:1}
-  .sb i{color:#c9c3b4;font-family:"Helvetica Neue",Arial,sans-serif;font-style:normal;font-size:9px;
-    letter-spacing:.14em;color:#5f5c53;transition:color .4s}
+  .sb:hover{transform:translateX(2px)}
+  .sb i{font-family:"Helvetica Neue",Arial,sans-serif;font-style:normal;font-size:9px;
+    letter-spacing:.14em;color:#948f81;transition:color .4s}
   .sb.on i{color:var(--gold)}
   .sb span{writing-mode:vertical-rl;text-orientation:upright;font-size:var(--t3);letter-spacing:.4em;
-    color:var(--paper);transition:color .4s,opacity .35s,max-height .35s;
-    max-height:0;opacity:0;overflow:hidden}
-  #side:hover .sb span,.sb.on span{max-height:200px;opacity:1}
-  #side:hover .sb{opacity:1}
-  .sb.on span{color:var(--gold)}
+    color:#d6d0c2;transition:color .3s,text-shadow .3s;max-height:200px;opacity:1;overflow:hidden;
+    text-shadow:0 0 14px rgba(4,5,10,.96),0 0 6px rgba(4,5,10,.9),0 1px 1px rgba(4,5,10,1)}
+  .sb:hover span{color:#fff}
+  .sb.on span{color:var(--gold);text-shadow:0 0 16px rgba(4,5,10,.96),0 0 8px rgba(201,162,39,.22)}
   .sb:after{content:"";width:1px;height:0;background:var(--gold);transition:height .4s}
   .sb.on:after{height:22px}
+
+  /* ---------- 诗卡 · 注释条 ---------- */
+  #c-ann{margin:8px 30px 0;padding-top:12px;cursor:none;border-top:1px solid rgba(236,231,219,.07)}
+  #c-ann:empty{display:none}
+  #c-ann .an-t{display:inline-block;font-size:11px;letter-spacing:.2em;color:#04050a;background:var(--gold);
+    padding:2px 7px;margin-right:10px;border-radius:1px}
+  #c-ann .an-body{display:inline;font-size:12.5px;letter-spacing:.1em;color:#bdb7aa}
+  #c-ann .an-body em{font-style:normal;color:#c9a227;margin-left:10px;border-bottom:1px dashed rgba(201,162,39,.4)}
+  #c-ann:hover .an-body em{color:#fff}
+  /* 全屏读 · 注释行 */
+  .an-row{display:flex;gap:10px;align-items:baseline;padding:5px 0;
+    border-bottom:1px solid rgba(236,231,219,.05)}
+  .an-row i{font-style:normal;font-family:"Helvetica Neue",Arial,sans-serif;font-size:9px;
+    color:#6f6b62;min-width:16px;padding-top:5px}
+  .an-row b{color:#c9a227;font-weight:400;min-width:4.2em;letter-spacing:.06em}
+  .an-row span{flex:1;line-height:1.95;color:#cdc7b9;font-size:13px}
+
+  /* ---------- 诗云 ---------- */
+  .systat{display:flex;flex-wrap:wrap;gap:34px;margin:0 0 54px}
+  .systat .n{font-size:30px;letter-spacing:.02em;color:var(--paper);font-weight:400;line-height:1}
+  .systat .n em{font-style:normal;font-size:13px;color:#8f8a7e;letter-spacing:.1em;margin-left:5px}
+  .systat .k{font-size:11.5px;letter-spacing:.18em;color:#a8a294;margin-top:9px}
+  .syh{font-size:16px;letter-spacing:.22em;color:var(--gold);margin:52px 0 6px;font-weight:400}
+  .syh em{font-style:normal;display:block;font-size:12px;letter-spacing:.12em;color:#8f8a7e;margin-top:9px}
+  .syc{border-top:1px solid rgba(236,231,219,.08);padding:22px 2px 20px;max-width:900px}
+  .syc .no{font-family:"Helvetica Neue",Arial,sans-serif;font-size:9px;letter-spacing:.3em;color:#6f6b62}
+  .syc .tt{font-size:15px;letter-spacing:.14em;color:#bdb7aa;margin:7px 0 12px}
+  .syc .ll{font-size:17px;line-height:2.05;letter-spacing:.16em;color:#e6e0d1;max-width:760px}
+  .syc .ll span{display:inline-block;margin:0 34px 0 0;min-width:5.2em}
+  .syc .cc{font-size:13px;line-height:1.95;color:#a8a294;margin-top:11px;max-width:640px}
+  .syc .ff{font-size:11.5px;line-height:1.9;color:#6f6b62;margin-top:10px}
+  .syc .go{display:inline-block;margin-top:13px;font-size:11.5px;letter-spacing:.16em;color:#8f8a7e;
+    border-bottom:1px dashed rgba(201,162,39,.3);cursor:none;transition:.25s}
+  .syc .go:hover{color:var(--gold)}
+  .syessay{margin:60px 0 0;max-width:720px}
+  .syessay p{font-size:14.5px;line-height:2.25;letter-spacing:.04em;color:#cfc9bb;margin:0 0 26px}
+  .syessay p b{color:var(--gold);font-weight:400}
+  .syessay .en-h{font-family:"Helvetica Neue",Arial,sans-serif;font-size:9px;letter-spacing:.34em;
+    color:#6f6b62;margin:0 0 8px}
+
+  /* ---------- 意象分类（检索 · 意象） ---------- */
+  #dimvals.img.on{display:block;max-width:78vw}
+  #dimvals .imtabs{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:8px}
+  #dimvals .imt{font-size:12px;letter-spacing:.1em;color:#a8a294;padding:3px 9px;border-radius:1px;
+    border:1px solid rgba(236,231,219,.10);cursor:none;transition:.2s}
+  #dimvals .imt:hover{color:#ece7db;border-color:rgba(236,231,219,.3)}
+  #dimvals .imt.on{color:#04050a;background:var(--gold);border-color:var(--gold)}
+  #dimvals .imhint{font-size:11px;letter-spacing:.16em;color:#6f6b62;margin:0 0 7px 1px}
+  #dimvals .imwords{display:flex;flex-wrap:wrap;gap:6px}
+
+  /* ---------- 拉近查看：点星之后出现的焦距控件 ---------- */
+  #zoomer{position:fixed;left:0;right:0;bottom:112px;z-index:15;display:none;justify-content:center;
+    pointer-events:none}
+  body.cardon #zoomer{display:flex}
+  #zoomer .zv{display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:2px;
+    border:1px solid rgba(236,231,219,.13);background:rgba(6,7,12,.74);
+    backdrop-filter:blur(10px);pointer-events:auto}
+  #zoomer .zk{font-size:9.5px;letter-spacing:.3em;color:#8f8a7e;font-family:"Helvetica Neue",Arial,sans-serif;
+    padding:0 4px}
+  #zoomer i{width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+    font-style:normal;font-size:15px;line-height:1;color:#d2ccbe;cursor:none;border-radius:1px;
+    border:1px solid rgba(236,231,219,.13);transition:.22s}
+  #zoomer i:hover{color:#04050a;background:var(--gold);border-color:var(--gold)}
+  #zoomer b{font-family:"Helvetica Neue",Arial,sans-serif;font-size:10px;letter-spacing:.16em;
+    color:#a8a294;min-width:56px;text-align:center;font-weight:400}
+  #zoomer .zh{font-size:10.5px;letter-spacing:.16em;color:#6f6b62;padding-left:6px}
 
   /* ---------- 检索维度 ---------- */
   .foot-l{display:flex;flex-direction:column;gap:12px;pointer-events:auto;align-items:flex-start}
@@ -113,7 +182,10 @@
     border:1px solid rgba(236,231,219,.16);cursor:none;border-radius:1px;transition:.25s}
   #dims .dm:hover{color:#ece7db;border-color:rgba(236,231,219,.34)}
   #dims .dm.on{color:#04050a;background:var(--gold);border-color:var(--gold)}
-  #dimvals{display:none;flex-wrap:wrap;gap:7px;max-width:76vw}
+  #dimvals{display:none;flex-wrap:wrap;gap:7px;max-width:76vw;max-height:188px;overflow-y:auto;
+    padding-right:8px;scrollbar-width:thin;scrollbar-color:#22242a transparent}
+  #dimvals::-webkit-scrollbar{width:4px}
+  #dimvals::-webkit-scrollbar-thumb{background:#22242a}
   #dimvals.on{display:flex}
   #dimvals .dv{font-size:12.5px;letter-spacing:.1em;color:#a9a496;padding:3px 10px;
     border:1px solid rgba(236,231,219,.12);cursor:none;border-radius:1px;transition:.22s}
@@ -175,7 +247,7 @@
   .lg:hover,.lg.sel{color:#fff;opacity:1}
   .lg .d{width:6px;height:6px;border-radius:50%;box-shadow:0 0 10px currentColor}
   .lg .c{font-size:11px;color:#8f8a7e;letter-spacing:0;font-family:"Helvetica Neue",Arial,sans-serif}
-  #hint{color:#8f8a7e;text-align:right;font-size:12.5px;line-height:2.1;letter-spacing:.16em;color:#8f8a7e}
+  #hint{color:#a8a294;text-align:right;font-size:12.5px;line-height:2.1;letter-spacing:.16em;color:#8f8a7e}
   #hint b{color:#b8b3a6;font-weight:400}
 
   /* ---------- 遨游星海（WASD 自由飞行） ---------- */
@@ -278,6 +350,9 @@
   #card .hotmark{display:inline-block;margin-left:12px;font-size:9px;letter-spacing:.22em;
     color:#04050a;background:var(--gold);padding:2px 7px;border-radius:1px;
     vertical-align:middle;transform:translateY(-2px)}
+  /* 同题消歧：望岳其三 · 衡山 */
+  .submark{display:inline-block;margin-left:10px;font-style:normal;font-size:.52em;letter-spacing:.06em;
+    color:#8f8a7c;border-bottom:1px dotted rgba(160,154,140,.45);vertical-align:middle;transform:translateY(-1px)}
   #card .mt{margin-top:12px;font-size:12.5px;letter-spacing:.18em;color:#a09a8c}
   #card .nt{margin-top:12px;font-size:12.5px;line-height:2;letter-spacing:.04em;color:#a29d8f;
     padding-left:12px;border-left:1px solid rgba(201,162,39,.42);max-width:360px}
@@ -297,6 +372,7 @@
   #card.reading .ft{display:none}
   body.reading #foot{opacity:0;pointer-events:none;transition:opacity .4s}
   body.reading #grain{opacity:.14}
+  body.reading #c-ann{display:none}
   body.reading #card:after{content:'';position:absolute;inset:0;pointer-events:none;
     background:radial-gradient(140% 90% at 12% 0%, rgba(201,162,39,.045) 0%, rgba(0,0,0,0) 55%),
                radial-gradient(120% 80% at 92% 100%, rgba(120,150,210,.035) 0%, rgba(0,0,0,0) 60%);}
@@ -325,47 +401,71 @@
   #card #c-poem.horiz::-webkit-scrollbar{width:5px}
   #card #c-poem::-webkit-scrollbar-thumb{background:rgba(201,162,39,.55);border-radius:3px}
   #card #c-poem::-webkit-scrollbar-track{background:rgba(236,231,219,.08)}
-  #c-full{align-content:safe center}
   #c-full{display:none}
   #card.reading #c-full{display:grid}
+  /* 两栏：左栏窄（诗 + 贴身材料），右栏宽（其余）。左右底边由 JS 配平。 */
+  /* 正文版口最宽 1500px：再宽行就散了；超宽屏把余量做成左右留白（滚动条仍在屏幕最右） */
   #c-full{flex:1;min-height:0;width:100%;box-sizing:border-box;overflow-y:auto;
-    padding:4vh 7vw 5vh;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:8vw;
+    padding:4.5vh max(6vw,calc((100% - 1500px)/2)) 5vh;
+    grid-template-columns:minmax(0,32fr) minmax(0,68fr);column-gap:0;
     align-items:start;align-content:safe center;background:#06070c}
-  #c-full .fs-left{column-count:1}
-  #c-full .fs-left.mid{column-count:1}
-  @media (min-width:1700px){ #c-full .fs-left.mid{column-count:2;column-gap:52px} }
-  #c-full .fs-left.long{column-count:2;column-gap:52px;column-rule:1px solid rgba(236,231,219,.13)}
-  #c-full .fs-left.paged{column-count:2;column-gap:52px;column-rule:1px solid rgba(236,231,219,.13)}
-  @media (min-width:1700px){ #c-full .fs-left.paged{column-count:3;column-gap:44px} }
-  #c-full .fs-left.long .fs-t{column-span:all}
-  @media (min-width:1700px){ #c-full .fs-left.long{column-count:3} }
-  #c-full .fs-left.long .fs-ln{font-size:23px;line-height:1.9}
-  #c-full .fs-right{position:sticky;top:24px;align-self:start}
-  #c-full .fs-t{column-span:all;font-size:clamp(23px,min(3.2vw,4.2vh),34px);letter-spacing:.14em;
+  #c-full>.fs-left,#c-full>.fs-right{box-sizing:border-box;min-width:0}
+  #c-full .fs-left{padding-right:2.6vw;border-right:1px solid rgba(236,231,219,.09)}
+  #c-full .fs-right{padding-left:4.4vw;padding-bottom:20px}
+  #c-full .fs-t{font-size:clamp(23px,min(2.6vw,3.6vh),34px);letter-spacing:.14em;
     color:#ece7db;text-align:center;line-height:1.35;text-wrap:balance;word-break:normal;overflow-wrap:anywhere}
-  #c-full .fs-a{column-span:all;margin:10px 0 14px;font-size:12.5px;letter-spacing:.28em;color:#a09a8c;text-align:center;margin-top:14px}
-  #c-full .fs-rule{column-span:all;width:56px;height:1px;background:rgba(201,162,39,.45);margin:26px auto}
-  #c-full .fs-ln{font-size:clamp(15px,min(1.9vw,3vh),23px);line-height:1.85;letter-spacing:.16em;color:#e6e0d2;
-    text-align:center;white-space:pre}
-  #c-full .fs-cp{break-inside:avoid;page-break-inside:avoid}
-  #c-full .fs-ln{white-space:nowrap}
-  #c-full.wide .fs-ln{font-size:clamp(13px,min(1.5vw,2.4vh),20px)}
-  #c-full .fs-pager{position:sticky;bottom:0;column-span:all;display:flex;align-items:center;justify-content:center;gap:22px;
-    margin-top:26px;padding:10px 0 4px;font-size:12.5px;letter-spacing:.2em;color:#8f8a7e;
-    background:linear-gradient(to top,rgba(6,7,12,.92) 40%,rgba(6,7,12,0));}
-  #c-full .pgb.off{opacity:.28;pointer-events:none}
-  #c-full .pgb{cursor:none;display:inline-flex;align-items:center;justify-content:center;
-    width:44px;height:44px;border:1px solid rgba(236,231,219,.18);border-radius:1px;transition:.3s}
-  #c-full .pgc{min-width:76px;text-align:center}
-  #c-full .pgb:hover{color:var(--gold);border-color:rgba(201,162,39,.5)}
-  #c-full .fs-note{color:#8f8a7e;margin-top:34px;text-align:center;font-size:12.5px;letter-spacing:.24em;color:#8f8a7e}
-  #c-full .fs-right{border-left:1px solid rgba(236,231,219,.09);padding-left:56px;padding-bottom:20px}
+  #c-full .fs-a{margin:14px 0 0;font-size:12.5px;letter-spacing:.28em;color:#a09a8c;text-align:center}
+  #c-full .fs-rule{width:56px;height:1px;background:rgba(201,162,39,.45);margin:24px auto 30px}
+  /* 诗 · 一排两句（两句一格，成联对齐） */
+  #c-full .fs-poem{display:grid;grid-template-columns:max-content max-content;justify-content:center;
+    column-gap:1.7em;row-gap:0;margin:0;font-size:var(--pfs,23px)}   /* em 间距跟诗走，不跟正文 */
+  #c-full .fs-ln{font-size:var(--pfs,23px);line-height:1.9;letter-spacing:.1em;color:#e6e0d2;
+    white-space:nowrap;text-align:center}
+  #c-full .fs-poem .fs-ln{text-align:left}
+  #c-full .fs-note{margin:30px 0 0;text-align:center;font-size:12.5px;letter-spacing:.24em;color:#8f8a7e}
+  #c-full .fs-lbody{padding-top:34px}
   #c-full .fs-sec{margin-bottom:30px}
   #c-full .fs-k{font-size:12.5px;letter-spacing:.3em;color:#a09a8c;margin-bottom:10px;
     font-family:"Helvetica Neue",Arial,sans-serif}
   #c-full .fs-v{font-size:17.5px;line-height:2.15;max-width:62ch;letter-spacing:.04em;color:#c9c3b4}
   #c-full .fs-v em{font-style:normal;color:#c9a227}
   #c-full .fs-v.small{font-size:12.5px;line-height:2;color:#8f8a7e}
+  /* 右栏够宽：放宽行宽上限（62ch 在深色大屏上只有二十来字，右半栏会空掉） */
+  #c-full .fs-right .fs-v{max-width:44em}
+  /* 搬进窄栏的材料：小一档、行距松一点（窄栏里的 17.5px 一行只放得下二十来字） */
+  #c-full .fs-lbody .fs-v{font-size:15px;line-height:2.05;max-width:44em}
+  #c-full .fs-lbody .fs-v.small{font-size:12.5px;line-height:2}
+  #c-full .fs-lbody .an-row span{font-size:12.5px}
+  /* 窄屏：两栏挤不下（左栏会窄到放不下一联），收回单栏，诗在上、材料在下 */
+  @media (max-width:1040px){
+    #c-full{grid-template-columns:minmax(0,1fr)}
+    #c-full .fs-left{border-right:0;border-bottom:1px solid rgba(236,231,219,.10);padding-right:0;padding-bottom:24px}
+    #c-full .fs-right{padding-left:0;padding-top:26px}
+    #c-full .fs-lbody{padding-top:0}
+  }
+  /* 右栏够宽时词条表分两列（39 条一行到底太细太长） */
+  #c-full .fs-right .an-g{max-width:none;column-width:380px;column-gap:52px}
+  #c-full .an-row{break-inside:avoid;page-break-inside:avoid}
+  /* 图版：整屏读时把这一首的配图放大挂出来。窄屏作横幅置顶，宽屏挂右列、随读不动 */
+  #c-full .fs-art{grid-column:1/-1;order:-1;display:flex;flex-direction:column;align-items:center;
+    gap:12px;padding:0 0 26px;border-bottom:1px solid rgba(236,231,219,.10)}
+  #c-full .fs-art[hidden]{display:none}
+  #c-full .fs-art .fg{position:relative;padding:7px;border:1px solid rgba(236,231,219,.14);
+    background:rgba(255,255,255,.015);box-shadow:0 20px 54px rgba(0,0,0,.55)}
+  #c-full .fs-art .fg:before,#c-full .fs-art .fg:after{content:'';position:absolute;width:9px;height:9px;
+    border:1px solid rgba(201,162,39,.42)}
+  #c-full .fs-art .fg:before{left:-5px;top:-5px;border-right:0;border-bottom:0}
+  #c-full .fs-art .fg:after{right:-5px;bottom:-5px;border-left:0;border-top:0}
+  #c-full .fs-art img{display:block;width:auto;max-width:min(86vw,460px);max-height:42vh;object-fit:contain}
+  #c-full .fs-art .cap{font-size:11.5px;letter-spacing:.24em;color:#7d786c;text-align:center}
+  #c-full .fs-art .cap i{font-style:normal;color:#5d594f}
+  body.reading #vmode,body.reading #tutbtn{display:none}
+  @media (min-width:1240px){
+    #c-full{grid-template-columns:minmax(0,28fr) minmax(0,40fr) minmax(0,32fr)}
+    #c-full .fs-art{grid-column:3;grid-row:1;order:0;align-self:start;position:sticky;top:0;
+      padding:0 0 0 2.2vw;border-left:1px solid rgba(236,231,219,.09);border-bottom:0;gap:14px}
+    #c-full .fs-art img{max-height:74vh}
+  }
   #card.reading .col{color:#d8d2c4}
   .readtoggle{position:absolute;right:70px;top:16px;min-height:40px;display:inline-flex;align-items:center;padding:0 14px;font-size:12.5px;letter-spacing:.18em;
     color:#6a675e;cursor:none;padding:3px 8px;border:1px solid rgba(236,231,219,.12);
@@ -441,24 +541,27 @@
   #panel{scrollbar-width:thin;scrollbar-color:#22242a transparent}
   #card .poem{scrollbar-width:thin;scrollbar-color:#22242a transparent}
   #pinner{padding:96px 8vw 110px;max-width:1500px;margin:0 auto}
-  .pclose{position:fixed;right:46px;top:36px;z-index:20;width:30px;height:30px;cursor:none;opacity:.45;transition:.35s}
-  .pclose:hover{opacity:1;transform:rotate(90deg)}
+  .pclose{position:fixed;right:46px;top:36px;z-index:22;width:30px;height:30px;cursor:none;
+    opacity:0;pointer-events:none;transition:opacity .5s,transform .35s}
+  body.panel-open .pclose{opacity:.62;pointer-events:auto}
+  body.panel-open .pclose:hover{opacity:1;transform:rotate(90deg)}
+  body.panel-open.panel-idle .pclose:not(:hover){opacity:0}
   .pclose:before,.pclose:after{content:"";position:absolute;left:14px;top:2px;width:1px;height:26px;background:var(--paper)}
   .pclose:before{transform:rotate(45deg)} .pclose:after{transform:rotate(-45deg)}
   .pnum{font-family:"Helvetica Neue",Arial,sans-serif;font-size:9px;letter-spacing:.42em;color:var(--gold);margin-bottom:26px}
   .phead{font-size:clamp(23px,4.6vw,34px);letter-spacing:.16em;line-height:1.22;margin-bottom:22px;font-weight:400}
-  .pintro{font-size:var(--t3);line-height:2.15;color:#a09a8c;letter-spacing:.05em;max-width:720px;margin-bottom:64px}
+  .pintro{font-size:var(--t3);line-height:2.15;color:#cdc7b9;letter-spacing:.05em;max-width:720px;margin-bottom:64px}
   .hr{height:1px;background:var(--line2);margin:0 0 48px}
 
   /* 生平 */
   /* 行迹图 */
   .route{margin:0 0 54px;padding:6px 0 0;position:relative}
   .route svg{display:block;width:100%;max-width:1080px;height:auto}
-  .route .rl{font-size:9px;letter-spacing:.3em;color:#4e4b44;margin-bottom:14px;
+  .route .rl{font-size:9px;letter-spacing:.3em;color:#8a857a;margin-bottom:14px;
     font-family:"Helvetica Neue",Arial,sans-serif}
   .route .d{fill:#ece7db;opacity:.9}
-  .route .lb{fill:#9a9588;font-size:12.5px;letter-spacing:.1em}
-  .route .yr{fill:#55524a;font-size:9px;letter-spacing:.04em}
+  .route .lb{fill:#d2ccbe;font-size:12.5px;letter-spacing:.1em}
+  .route .yr{fill:#8f8a7e;font-size:9px;letter-spacing:.04em}
   .route .st{fill:#c9a227;font-size:9px;letter-spacing:.24em}
 
   .era{margin-bottom:58px;position:relative;padding-left:36px;border-left:1px solid rgba(236,231,219,.09);max-width:960px}
@@ -466,23 +569,23 @@
     background:var(--gold);box-shadow:0 0 16px rgba(201,162,39,.9)}
   .era .en{font-size:23px;letter-spacing:.18em;margin-bottom:8px}
   .era .em{font-family:"Helvetica Neue",Arial,sans-serif;font-size:9px;letter-spacing:.26em;
-    color:#8b877b;margin-bottom:22px}
-  .ev{display:flex;gap:20px;padding:11px 0;font-size:12.5px;line-height:1.9;color:#b0ab9e;
+    color:#b5afa2;margin-bottom:22px}
+  .ev{display:flex;gap:20px;padding:11px 0;font-size:12.5px;line-height:1.9;color:#d5cfc2;
     border-bottom:1px solid rgba(236,231,219,.045)}
   .ev .y{min-width:56px;color:var(--gold);font-size:12.5px;letter-spacing:.06em}
-  .ev .a{min-width:40px;color:#4e4b44;font-size:12.5px;padding-top:2px}
-  .ev .pl{margin-left:auto;color:#57544d;font-size:12.5px;white-space:nowrap;letter-spacing:.1em}
+  .ev .a{min-width:40px;color:#8f8a7e;font-size:12.5px;padding-top:2px}
+  .ev .pl{margin-left:auto;color:#8f8a7e;font-size:12.5px;white-space:nowrap;letter-spacing:.1em}
   .algo-list{margin:6px 0 18px;border-top:1px solid rgba(236,231,219,.06)}
   .algo-row{display:flex;align-items:baseline;gap:16px;padding:7px 2px;
-    border-bottom:1px solid rgba(236,231,219,.05);font-size:12.5px;color:#a9a496}
-  .algo-row .n{width:22px;color:#4e4b44;font-family:"Helvetica Neue",Arial,sans-serif;font-size:9px}
+    border-bottom:1px solid rgba(236,231,219,.05);font-size:12.5px;color:#c8c2b4}
+  .algo-row .n{width:22px;color:#8f8a7e;font-family:"Helvetica Neue",Arial,sans-serif;font-size:9px}
   .algo-row .t{flex:1;letter-spacing:.06em}
-  .algo-row .s{color:#6a675e;font-family:"Helvetica Neue",Arial,sans-serif;font-size:12.5px}
-  .algo-note{font-size:12.5px;line-height:2;color:#a09a8c;letter-spacing:.04em;max-width:680px}
+  .algo-row .s{color:#a8a294;font-family:"Helvetica Neue",Arial,sans-serif;font-size:12.5px}
+  .algo-note{font-size:12.5px;line-height:2;color:#cdc7b9;letter-spacing:.04em;max-width:680px}
   .algo-note b{color:var(--gold);font-weight:400}
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
   .chip{font-size:12.5px;letter-spacing:.14em;padding:5px 11px;border:1px solid var(--line);
-    color:#948f81;cursor:none;transition:.28s;border-radius:1px}
+    color:#bdb7aa;cursor:none;transition:.28s;border-radius:1px}
   .chip:hover{color:#04050a;background:var(--gold);border-color:var(--gold)}
 
   /* 交游 */
@@ -498,14 +601,14 @@
   .fdetail .fl b{display:block;font-size:12.5px;color:var(--paper);font-weight:400;letter-spacing:.1em;margin-bottom:5px}
   .fdetail .fl b.jump{cursor:none;transition:color .25s;border-bottom:1px dashed rgba(201,162,39,.25);display:inline-block}
   .fdetail .fl b.jump:hover{color:var(--gold)}
-  .fdetail .fl p{font-size:12.5px;line-height:1.95;color:#948f81}
-  .fdetail .fl i{font-style:normal;color:#8b877b;font-size:11px;letter-spacing:.1em}
+  .fdetail .fl p{font-size:12.5px;line-height:1.95;color:#bdb7aa}
+  .fdetail .fl i{font-style:normal;color:#b5afa2;font-size:11px;letter-spacing:.1em}
 
   /* 评点 */
   .topicbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:-28px 0 40px}
-  .topicbar .tl{font-size:9px;letter-spacing:.32em;color:#3f3d37;margin-right:10px;
+  .topicbar .tl{font-size:9px;letter-spacing:.32em;color:#8a857a;margin-right:10px;
     font-family:"Helvetica Neue",Arial,sans-serif}
-  .topicbar .tk{font-size:12.5px;letter-spacing:.16em;color:#6a675e;padding:4px 12px;
+  .topicbar .tk{font-size:12.5px;letter-spacing:.16em;color:#a8a294;padding:4px 12px;
     border:1px solid rgba(236,231,219,.10);cursor:none;transition:.28s;border-radius:1px}
   .topicbar .tk:hover{color:var(--paper)}
   .topicbar .tk.on{color:#04050a;background:var(--gold);border-color:var(--gold)}
@@ -597,14 +700,15 @@
     #legend{max-height:150px;overflow-y:auto}
     #top{padding:12px 16px}
     #hint{display:none}
-    #c-full{grid-template-columns:1fr;padding:4vh 7vw 6vh;gap:28px}
-    #c-full .fs-right{border-left:0;padding-left:0;border-top:1px solid rgba(236,231,219,.10);padding-top:22px}
-    #c-full .fs-left,#c-full .fs-left.mid,#c-full .fs-left.long{column-count:1}
+    #c-full{grid-template-columns:1fr;padding:4vh 6vw 6vh;gap:0}
+    #c-full .fs-left{padding-right:0;border-right:0;border-bottom:1px solid rgba(236,231,219,.10);padding-bottom:22px}
+    #c-full .fs-right{border-left:0;padding-left:0;padding-top:26px}
+    #c-full .fs-lbody{padding-top:0}
     #c-full .fs-t{font-size:20px;letter-spacing:.08em;text-wrap:balance;word-break:normal;overflow-wrap:anywhere;max-width:100%}
     #card .tt{font-size:20px;word-break:normal;overflow-wrap:anywhere;padding-right:96px;max-width:100%}
     #card .hd{padding-right:22px;padding-top:64px}
     #c-title{max-width:100%}
-    #c-full .fs-ln,#c-full .fs-left.long .fs-ln,#c-full .fs-left.mid .fs-ln{font-size:15px;line-height:1.9;white-space:normal}
+    #c-full .fs-ln{font-size:15px;line-height:1.9;white-space:normal}
     #c-full .fs-v{font-size:12.5px;line-height:1.95}
     #c-full .fs-k{font-size:11px}
     #card .tt{font-size:23px}
@@ -670,10 +774,10 @@
   #card .cns{font-size:12.5px;line-height:1.9;color:#9d988b}
   .evd{font-size:12.5px;line-height:1.85;color:#8f8a7e}
   .rel i{font-size:12px}
-  .pintro{font-size:15px;line-height:1.95;color:#c3bdb0;letter-spacing:.04em;max-width:680px;margin-bottom:56px}
+  .pintro{font-size:15px;line-height:1.95;color:#d9d3c6;letter-spacing:.04em;max-width:680px;margin-bottom:56px}
   .era{margin-bottom:56px}
   .era .en{font-size:23px;letter-spacing:.16em}
-  .ev{font-size:15px;line-height:1.8;color:#bdb7aa;gap:22px;padding:12px 0}
+  .ev{font-size:15px;line-height:1.8;color:#d8d2c5;gap:22px;padding:12px 0}
   .ev .y{font-size:11px;letter-spacing:.14em;color:#c9a227;min-width:44px;padding-top:6px}
   .era .ev[style]{font-size:15px!important}
 
@@ -681,6 +785,16 @@
   body.hud-off #top,body.hud-off #side,body.hud-off #foot,body.hud-off #tick,
   body.hud-off #roamread,body.hud-off #cur,body.hud-off #grain{opacity:0;pointer-events:none;transition:opacity .5s}
   body.locked{cursor:none}
+
+  /* ---- 版面：底部条让开左侧竖排导航；词表高度随视口收 ---- */
+  @media (min-width:701px){
+    #foot{padding-left:124px}
+    #dimvals.img.on{max-width:min(78vw, calc(100vw - 210px))}
+  }
+  @media (max-width:700px){
+    #foot{padding-left:88px}
+  }
+  #dimvals{max-height:min(188px, 25vh)}
 
   @media (prefers-reduced-motion: reduce){
     *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
@@ -715,6 +829,7 @@
   <div class="sb" data-m="life"><i>02</i><span>生平</span></div>
   <div class="sb" data-m="friends"><i>03</i><span>交游</span></div>
   <div class="sb" data-m="crit"><i>04</i><span>评点</span></div>
+  <div class="sb" data-m="shiyun"><i>05</i><span>诗云</span></div>
 </nav>
 
 <div id="foot">
@@ -731,7 +846,6 @@
     <div class="ctrlrow">
       <div id="mode"><span class="lab">着色<i>COLOR</i></span><span class="m on" data-m="image">意象</span><span class="m" data-m="period">时期</span></div>
       <i class="sep"></i>
-      <div id="sy"><span class="lab">诗云<i>NOISE</i></span><span class="s" id="sytog">伪诗</span></div>
       <div id="sy2"><span class="lab">生涯<i>LIFE</i></span><span class="s" id="tourbtn">巡游</span></div>
       <i class="sep"></i>
       <div id="roam"><span class="lab">遨游<i>FLIGHT</i></span><span class="s" id="roamtog" role="button" aria-pressed="false" tabindex="0">WASD</span></div>
@@ -745,9 +859,15 @@
     <span><b>滚轮</b> 远近</span><span class="d">·</span>
     <span><b>点击星辰</b> 读诗</span><span class="d">·</span>
     <span><b>WASD</b> 遨游星海</span><span class="d">·</span>
+    <span><b>/</b> 检索</span><span class="d">·</span>
     <span><b>F</b> 全屏</span>
   </div>
 </div>
+
+<div id="zoomer"><div class="zv">
+  <span class="zk">拉近</span><i id="zout" role="button" aria-label="推远">－</i><b id="zval">×1.00</b><i id="zin" role="button" aria-label="拉近">＋</i>
+  <span class="zh">滚轮 / ＋－ 键</span>
+</div></div>
 
 <div id="tip"></div>
 <div id="reticle"><i></i><i></i><i></i><i></i><i></i><b></b></div>
@@ -775,6 +895,7 @@
   </div>
   <div class="poem" id="c-poem"></div>
   <div id="c-poemhint"></div>
+  <div id="c-ann"></div>
 <div id="tourcap"></div>
   <div id="c-full"></div>
   <div class="ft">
@@ -786,7 +907,8 @@
   </div>
 </aside>
 
-<section id="panel"><div class="pclose" id="pclose"></div><div id="pinner"></div></section>
+<section id="panel"><div id="pinner"></div></section>
+<div class="pclose" id="pclose" role="button" tabindex="-1" aria-label="关闭"></div>
 <div id="sweep"></div>
 
 <div id="load">
@@ -799,13 +921,19 @@
 </div>
 
 <script src="data.js"></script>
+<script src="imagery.js"></script>
 <script src="analysis.js"></script>
 <script src="collation.js"></script>
 <script src="gloss.js"></script>
+<script src="gloss2.js"></script>
+<script src="annot.js"></script>
 <script src="yiyi.js"></script>
 <script src="yiyi2.js"></script>
 <script src="sky_data.js"></script>
 <script src="shiyun.js"></script>
+<script src="shiyun_good.js"></script>
+<script src="life_data.js"></script>
+<script src="life.js"></script>
 
 <script>
 /* 全局兜底：任何未捕获的错误都要给用户一句话，而不是停在「选星中」的黑屏上 */
@@ -829,7 +957,10 @@
       + '</div>';
   }
   window.addEventListener('error', function(e){
-    showFatal('初始化时出错：' + (e && (e.message || (e.target && e.target.src) || '未知错误')));
+    var t = e && e.target;
+    // 图片/样式等资源加载失败不算初始化失败：配图可能本来就没有（单文件版只内嵌 30 幅）
+    if(t && t !== window && t.tagName) return;
+    showFatal('初始化时出错：' + (e && (e.message || '未知错误')));
   }, true);
   window.addEventListener('unhandledrejection', function(e){
     showFatal('初始化时出错：' + (e && e.reason ? (e.reason.message || e.reason) : '未知错误'));
@@ -2500,6 +2631,7 @@ var _prof={bg:0,stars:0,post:0,n:0};
 function render(t){
   _renderNo++;
   syncCam();
+  if(document.body.classList.contains('cardon')) syncZoomHUD();
   var _pt0=performance.now();
   /* 背景：诗云的六万首诗（无贴图） */
   ctx.globalCompositeOperation='source-over';
@@ -3124,6 +3256,7 @@ document.addEventListener('pointerover', function(e){
 }, true);
 document.addEventListener('pointermove',function(e){
   tx=e.clientX; ty=e.clientY; mouse.x=e.clientX; mouse.y=e.clientY; mouse.on=true;
+  if(panelOpen && performance.now()-_pcMove>150){ _pcMove=performance.now(); pcReveal(); }
   // 先看有没有落在星座连线上
   var ei = (selected && _edges.length) ? edgeAt(e.clientX,e.clientY) : -1;
   if(ei !== edgeHover){
@@ -3215,6 +3348,7 @@ cv.addEventListener('wheel',function(e){
   } else {
     cam.zoom=Math.max(.55,Math.min(3.6,cam.zoom*(e.deltaY>0?.925:1.08)));
   }
+  syncZoomHUD();
   lastMove=performance.now();
 },{passive:false});
 
@@ -3331,10 +3465,79 @@ function selectNoise(po){
 
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
+/* ---------- 拉近查看：点星之后的焦距控制 ----------
+   点开一颗星，镜头会先转过去、再往前推一段；这时还想看清楚，
+   就用屏幕下方这个 ＋／－（或滚轮、或键盘 + -）。 */
+var _footH=-1, _fitT=0;
+function fitFootGap(force){
+  var f=document.getElementById('foot'), z=document.getElementById('zoomer');
+  if(!f||!z) return;
+  var now=performance.now();
+  if(!force && now-_fitT<200) return;
+  _fitT=now;
+  var h=Math.round(f.getBoundingClientRect().height);
+  if(h===_footH) return;
+  _footH=h;
+  z.style.bottom=Math.max(112, h+22)+'px';
+}
+var _zShown=-1;
+function syncZoomHUD(){
+  fitFootGap();
+  var b=document.getElementById('zval');
+  if(!b) return;
+  var v=Math.round(cam.zoom*100);
+  if(v===_zShown) return;
+  _zShown=v;
+  b.textContent='×'+cam.zoom.toFixed(2);
+}
+function nudgeZoom(f){
+  var z=Math.max(.55,Math.min(4.20,cam.zoom*f));
+  fly={yaw:cam.yaw,pitch:cam.pitch,zoom:z};
+  autoSpin=false; lastMove=performance.now();
+  try{ audCue('zoom'); }catch(e){}
+  syncZoomHUD();
+}
+(function bindZoomer(){
+  function ready(){
+    var zi=document.getElementById('zin'), zo=document.getElementById('zout');
+    if(zi) zi.onclick=function(){ nudgeZoom(1.22); };
+    if(zo) zo.onclick=function(){ nudgeZoom(1/1.22); };
+    var zv=document.querySelector('#zoomer .zv');
+    if(zv) zv.addEventListener('wheel', function(e){ e.preventDefault(); nudgeZoom(e.deltaY>0?1/1.12:1.12); }, {passive:false});
+    syncZoomHUD();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ready);
+  else ready();
+})();
+
 /* ============ 诗卡 ============ */
 var card=document.getElementById('card');
+function trimNote(){
+  var cap=document.getElementById('c-artnote');
+  if(cap) cap.textContent='';
+}
+function artNote(txt){
+  var box=document.getElementById('c-art'); if(!box||!box.parentNode) return;
+  var cap=document.getElementById('c-artnote');
+  if(!cap){
+    cap=document.createElement('div');
+    cap.id='c-artnote';
+    cap.style.cssText='padding:10px 30px 4px;font-size:12.5px;letter-spacing:.12em;color:#a09a8c';
+    box.parentNode.insertBefore(cap, box.nextSibling);
+  }
+  cap.textContent=txt;
+}
+// 配图的两种来源：精选图（人工策展 30 幅，单文件版内联为 data URI）/ 全量图库 art/all
+function artUrls(p){
+  var slug=(D.art||{})[p.t];
+  var pad=('0000'+p.i).slice(-4);
+  var cur=(window.ART_DATA&&window.ART_DATA[slug])||(slug?('art/opt/'+slug+'.jpg'):null);
+  // 单文件版内联了精选图、却没有 art/ 目录：不去请求 art/all，免得每次开卡都撞一串 404
+  var bulk=window.ART_DATA?null:('art/all/'+pad+'.jpg');
+  return {curated:cur||null, bulk:bulk};
+}
 function select(p){
-  document.body.classList.add('cardon');
+  document.body.classList.add('cardon'); fitFootGap(true);
   selected=p; if(periodHL!==null){ periodHL=null; phl.classList.remove('on'); }
   constellation = pickConstellation(p);
   linkMode='image';
@@ -3343,15 +3546,15 @@ function select(p){
   if(viewMode==='sky'){
     var d0=p.dir;
     fly={yaw:Math.atan2(d0.x,d0.z), pitch:Math.asin(Math.max(-1,Math.min(1,d0.y))),
-         zoom:Math.min(2.4,Math.max(1.25,cam.zoom*1.35))};
+         zoom:Math.min(3.40,Math.max(2.00,cam.zoom*1.45))};
   } else {
     aimAtWorld(p.x, p.y, p.z,
-      roamOn ? cam.zoom : Math.max(1.45, Math.min(2.2, cam.zoom*1.25)));
+      roamOn ? cam.zoom : Math.max(1.85, Math.min(3.0, cam.zoom*1.35)));
   }
   autoSpin=false; lastMove=performance.now();
   try{ audSelect(p._q ? Math.max(-0.8,Math.min(0.8,(p._q.sx/W-0.5)*1.6)) : 0, (function(){var h=0;for(var i=0;i<p.t.length;i++) h=(h*31+p.t.charCodeAt(i))>>>0;return h%10;})()); audPaper(); }catch(e){}
   document.getElementById('c-no').textContent='NO. '+String(p.i+1).padStart(4,'0');
-  document.getElementById('c-title').innerHTML=esc(p.t)+(p.hot?'<span class="hotmark">名篇</span>':'')+
+  document.getElementById('c-title').innerHTML=esc(p.t)+(function(){var s=(window.SUB||{})[String(p.i)];return s?'<i class="submark">'+esc(s)+'</i>':'';})()+(p.hot?'<span class="hotmark">名篇</span>':'')+
     ((analysisFor(p)) ? (function(){var x=analysisFor(p);return '<span style="display:inline-block;white-space:nowrap;margin-left:10px;vertical-align:middle;color:'+(x.s==='考据'?'#c9a227':'#9a9588')+';border:1px solid currentColor;padding:1px 6px;font-size:11px;letter-spacing:.08em">'+(x.s||'考据')+'</span>';})() : '');
   var cat=CAT[p.d]||{label:'',color:''};
   var pn=(p.pd>=0&&PERIODS[p.pd])?PERIODS[p.pd].n:'';
@@ -3415,17 +3618,34 @@ function select(p){
   }
 
   renderRelations(p);
+  // 注释条：有多少条字注、有没有串讲/今译/赏析
+  (function(){
+    var el=document.getElementById('c-ann'); if(!el) return;
+    var an=annFor(p);
+    var bits=[];
+    var ng=(an&&an.g)?an.g.length:0;
+    if(ng) bits.push('字注 '+ng+' 条');
+    if(an&&an.m&&an.m.length) bits.push('逐联串讲');
+    if(an&&an.y) bits.push('今译');
+    if(an&&an.a) bits.push('赏析');
+    if(!bits.length){ el.innerHTML=''; el.onclick=null; return; }
+    el.innerHTML='<span class="an-t">注</span><span class="an-body">'+bits.join(' · ')+'<em>展开读 ›</em></span>';
+    el.onclick=function(){ setReading(true); };
+  })();
   document.getElementById('c-bar').style.width=Math.min(100,(p.l/3.2)*100)+'%';
   // 配图
   // 配图：优先"精选图"（人工策展的 30 幅），否则回落到全量图库 art/all/<id>.jpg
-  var slug=(D.art||{})[p.t];
   var artEl=document.getElementById('c-art'), imgEl=document.getElementById('c-img');
-  var curated=(window.ART_DATA&&window.ART_DATA[slug])||(slug?('art/opt/'+slug+'.jpg'):null);
-  var pad=('0000'+p.i).slice(-4);
-  var bulk='art/all/'+pad+'.jpg';
+  var _u=artUrls(p), curated=_u.curated, bulk=_u.bulk;
   var layers=[];
   if(curated) layers.push('url("'+curated+'")');
-  layers.push('url("'+bulk+'")');
+  if(bulk) layers.push('url("'+bulk+'")');
+  if(!layers.length){
+    // 没有图源就干脆不装作有图
+    artEl.classList.remove('on');
+    artNote('这一首暂无配图（单文件版内嵌 30 幅精选图，完整图库见 05_全图库版）。');
+  }
+  if(layers.length){
   imgEl.style.backgroundImage=layers.join(',');
   artEl.classList.add('on');
   // 两张都没有时优雅退场
@@ -3433,20 +3653,14 @@ function select(p){
   probe.onerror=function(){
     artEl.classList.remove('on');
     // 单文件版没有 art/ 目录：不装作有图，说明白
-    var cap=document.getElementById('c-artnote');
-    if(!cap){
-      cap=document.createElement('div');
-      cap.id='c-artnote';
-      cap.style.cssText='padding:10px 30px 4px;font-size:12.5px;letter-spacing:.12em;color:#a09a8c';
-      artEl.parentNode.insertBefore(cap, artEl.nextSibling);
-    }
-    cap.textContent='这一首的配图在「杜诗星海_全图版」里（本单文件只内嵌 30 幅精选图）。';
+    artNote('这一首暂无配图（单文件版内嵌 30 幅精选图，完整图库见 05_全图库版）。');
   };
   probe.onload=function(){
     var cap=document.getElementById('c-artnote');
     if(cap) cap.textContent='';
   };
   probe.src=curated||bulk;
+  }
 
   card.classList.add('on');
   poem.scrollLeft=0;
@@ -3507,6 +3721,7 @@ window.addEventListener('keydown',function(e){
   // 「/」或 Ctrl/Cmd+K 直接检索
   if((e.key==='/' && !typing) || ((e.ctrlKey||e.metaKey) && (e.key==='k'||e.key==='K'))){
     e.preventDefault();
+    document.body.classList.add('searching');
     var q=document.getElementById('q'); if(q){ q.focus(); q.select(); }
     return;
   }
@@ -3538,8 +3753,8 @@ window.addEventListener('keydown',function(e){
   else if(e.key==='ArrowRight'){ cam.yaw+=step; autoSpin=false; }
   else if(e.key==='ArrowUp'){ cam.pitch=Math.min(1.35,cam.pitch+step*0.7); autoSpin=false; }
   else if(e.key==='ArrowDown'){ cam.pitch=Math.max(-1.35,cam.pitch-step*0.7); autoSpin=false; }
-  else if(e.key==='+'||e.key==='='){ cam.zoom=Math.min(3.6,cam.zoom*1.1); audCue('zoom'); }
-  else if(e.key==='-'||e.key==='_'){ cam.zoom=Math.max(.55,cam.zoom*0.9); audCue('zoom'); }
+  else if(e.key==='+'||e.key==='='){ cam.zoom=Math.min(3.6,cam.zoom*1.1); audCue('zoom'); syncZoomHUD(); }
+  else if(e.key==='-'||e.key==='_'){ cam.zoom=Math.max(.55,cam.zoom*0.9); audCue('zoom'); syncZoomHUD(); }
   else return;
   lastMove=performance.now();
 });
@@ -3943,6 +4158,24 @@ var EMO=['愁','悲','泪','恨','思','忧','苦','叹','哭','笑','喜','哀'
 function dimValues(d){
   var out=[], i, k, cnt={};
   if(d==='image'){
+    var T=window.IMAGERY;
+    if(T && T.cats && T.cats.length){
+      var list=[];
+      if(IMGSEL==='all'){
+        T.cats.forEach(function(c){ c.words.forEach(function(x){ list.push([x[0],x[1],c.label]); }); });
+        list.sort(function(a,b){return b[1]-a[1];});
+        list.slice(0,48).forEach(function(x){ out.push({v:x[0],label:x[0],n:x[1],cat:x[2]}); });
+      } else {
+        var c0=null;
+        T.cats.forEach(function(c){ if(c.id===IMGSEL) c0=c; });
+        if(c0){
+          list=c0.words.slice();
+          list.sort(function(a,b){return b[1]-a[1];});
+          list.forEach(function(x){ out.push({v:x[0],label:x[0],n:x[1],cat:c0.label}); });
+        }
+      }
+      return out;
+    }
     var arr=[];
     for(k in WC){ if(WC[k]>=40) arr.push([k,WC[k]]); }
     arr.sort(function(a,b){return b[1]-a[1];});
@@ -3974,19 +4207,56 @@ function isActive(d,v){
   if(d==='theme') return catFilter===v;
   return false;
 }
+var IMGSEL='all';                       // 意象细类：all 或 IMAGERY.cats[].id
+var dimOpen=false;                      // 检索词面板默认收起，点维度按钮再展开
 function renderDimVals(){
   if(!dimvals) return;
   var vals=dimValues(dimSel);
   dimvals.innerHTML='';
-  vals.forEach(function(x){
-    var s=document.createElement('span');
-    s.className='dv'; s.dataset.v=x.v;
-    s.innerHTML=esc(x.label)+'<i>'+x.n+'</i>';
-    if(isActive(dimSel,x.v)) s.classList.add('on');
-    s.onclick=function(){ applyDim(dimSel,x.v); };
-    dimvals.appendChild(s);
-  });
-  dimvals.classList.add('on');
+  if(dimSel==='image' && window.IMAGERY && window.IMAGERY.cats){
+    dimvals.classList.add('img');
+    var T=window.IMAGERY;
+    var tabs=document.createElement('div'); tabs.className='imtabs';
+    var tk=document.createElement('span');
+    tk.className='imt'+(IMGSEL==='all'?' on':''); tk.textContent='全部';
+    tk.onclick=function(){ IMGSEL='all'; renderDimVals(); };
+    tabs.appendChild(tk);
+    T.cats.forEach(function(c){
+      var t=document.createElement('span');
+      t.className='imt'+(IMGSEL===c.id?' on':'');
+      t.textContent=c.label; t.title=c.hint||'';
+      t.onclick=function(){ IMGSEL=c.id; renderDimVals(); };
+      tabs.appendChild(t);
+    });
+    dimvals.appendChild(tabs);
+    var hint=document.createElement('div'); hint.className='imhint';
+    var cnow=null; T.cats.forEach(function(c){ if(c.id===IMGSEL) cnow=c; });
+    hint.textContent = cnow ? (cnow.label+' · '+cnow.hint+'（点一个加一个，再点取消）')
+                            : '全部 · 按出现诗数排序的前四十八词（点一个加一个，再点取消）';
+    dimvals.appendChild(hint);
+    var wrap=document.createElement('div'); wrap.className='imwords';
+    vals.forEach(function(x){
+      var s=document.createElement('span');
+      s.className='dv'; s.dataset.v=x.v;
+      s.innerHTML=esc(x.label)+'<i>'+x.n+'</i>';
+      if(isActive(dimSel,x.v)) s.classList.add('on');
+      s.onclick=function(){ applyDim(dimSel,x.v); };
+      wrap.appendChild(s);
+    });
+    dimvals.appendChild(wrap);
+  } else {
+    dimvals.classList.remove('img');
+    vals.forEach(function(x){
+      var s=document.createElement('span');
+      s.className='dv'; s.dataset.v=x.v;
+      s.innerHTML=esc(x.label)+'<i>'+x.n+'</i>';
+      if(isActive(dimSel,x.v)) s.classList.add('on');
+      s.onclick=function(){ applyDim(dimSel,x.v); };
+      dimvals.appendChild(s);
+    });
+  }
+  dimvals.classList.toggle('on', !!dimOpen);
+  fitFootGap(true);
 }
 function applyDim(d,v){
   if(d==='image'||d==='emotion'){
@@ -4008,9 +4278,12 @@ function applyDim(d,v){
 }
 [].forEach.call(document.querySelectorAll('#dims .dm'), function(b){
   b.onclick=function(){
+    var same=(dimSel===b.dataset.d);
     dimSel=b.dataset.d;
-    [].forEach.call(document.querySelectorAll('#dims .dm'), function(x){ x.classList.toggle('on', x===b); });
+    dimOpen = same ? !dimOpen : true;
+    [].forEach.call(document.querySelectorAll('#dims .dm'), function(x){ x.classList.toggle('on', x===b && dimOpen); });
     renderDimVals();
+    try{ audCue('filter'); }catch(e){}
   };
 });
 renderDimVals();
@@ -4040,7 +4313,9 @@ function syncLegend(){
 
 /* ============ 检索 ============ */
 var qEl=document.getElementById('q'), qc=document.getElementById('qc');
-qEl.addEventListener('input',function(){ audCue('type'); query=qEl.value.trim()||null; syncTerms(); updCount(); sayZero(); });
+qEl.addEventListener('input',function(){ audCue('type'); query=qEl.value.trim()||null; syncTerms(); updCount(); sayZero();
+  document.body.classList.toggle('searching', !!query); });
+qEl.addEventListener('blur',function(){ if(!qEl.value.trim()) document.body.classList.remove('searching'); });
 /* 回车直接打开最匹配的一首：检索不该只亮灯，要能走进去 */
 qEl.addEventListener('keydown',function(e){
   if(e.key!=='Enter') return;
@@ -4055,6 +4330,7 @@ qEl.addEventListener('keydown',function(e){
     qEl.blur();
     qEl.value=''; query=null; updCount();
     var _qc=document.getElementById('qc'); if(_qc) _qc.textContent='';
+    document.body.classList.remove('searching');
     select(best);
   }
 });
@@ -4067,7 +4343,8 @@ function sayZero(){
   if(qTerms.length && n===0){ el.textContent='没有一首含有「'+qTerms.join('、')+'」'; el.style.color='#c9a227'; }
   else if(el.style.color){ el.style.color=''; }
 }
-qEl.addEventListener('keydown',function(e){ if(e.key==='Escape'){qEl.value='';query=null;syncTerms();updCount();} });
+qEl.addEventListener('keydown',function(e){ if(e.key==='Escape'){qEl.value='';query=null;syncTerms();updCount();
+  document.body.classList.remove('searching');} });
 function matchCount(){
   if(!qTerms.length&&!catFilter&&!formFilter&&periodHL===null) return N;
   var n=0;
@@ -4119,8 +4396,19 @@ function setSide(m){ sbs.forEach(function(b){ b.classList.toggle('on', b.dataset
 sbs.forEach(function(b){ magnetic(b, 0.18, 18); });
 [].forEach.call(document.querySelectorAll('.lg'), function(d){ magnetic(d, 0.12, 12); });
 document.getElementById('pclose').onclick=closePanel;
+/* 关闭叉：只在面板打开时出现；鼠标静止两秒多就收起来，一动又回来。
+   它现在挂在 #panel 外面——真正的视口定位，滚长文时不会跟着内容跑掉。 */
+var _pcIdle=0, _pcMove=0;
+function pcReveal(){
+  if(!panelOpen) return;
+  document.body.classList.remove('panel-idle');
+  clearTimeout(_pcIdle);
+  _pcIdle=setTimeout(function(){ if(panelOpen) document.body.classList.add('panel-idle'); },3000);
+}
 function closePanel(){
   panelOpen=false; panel.classList.remove('open'); setSide('star');
+  document.body.classList.remove('panel-open'); document.body.classList.remove('panel-idle');
+  clearTimeout(_pcIdle);
   runSweep(true);
   setTimeout(function(){ if(!panelOpen) panel.style.display='none'; },800);
 }
@@ -4134,14 +4422,18 @@ function runSweep(back){
 function openPanel(m){
   panel.style.display='block';
   panelOpen=true; setSide(m); curMod=m;
+  document.body.classList.add('panel-open'); pcReveal();
   runSweep(false);
   if(m==='about') pinner.innerHTML=renderAbout();
-  else if(m==='life') pinner.innerHTML=renderLife();
+  else if(m==='life') pinner.innerHTML=(window.renderLifePanel?window.renderLifePanel():renderLife());
   else if(m==='friends') pinner.innerHTML=renderFriends();
   else if(m==='crit') pinner.innerHTML=renderCrit();
+  else if(m==='shiyun') pinner.innerHTML=renderShiyun();
   panel.scrollTop=0;
   requestAnimationFrame(function(){ panel.classList.add('open'); });
   bindChips();
+  if(m==='shiyun') bindShiyun();
+  if(m==='life' && window.bindLifePanel){ try{ window.bindLifePanel(pinner); }catch(e){} }
   if(m==='friends') bindFriends();
   if(m==='crit') bindTopics();
   var ab=document.getElementById('algoBtn');
@@ -4150,7 +4442,31 @@ function openPanel(m){
   if(sb) sb.onclick=function(){ setSy(!syOn); };
   var ph=pinner.querySelector('.phead'); if(ph) splitIn(ph, {delay:80});
   staggerIn(pinner);
-  document.getElementById('card').classList.remove('on');
+  /* 开面板＝离开诗卡：整屏读、cardon、星座线一起收干净。
+     以前只摘掉 .on，body 上还留着 cardon/reading——关掉面板回来，
+     整屏读的「退出 ×」还挂着，底部检索条却是隐的，只剩一条焦距栏浮在下面。 */
+  if(readingOn) setReading(false);
+  var _cd=document.getElementById('card');
+  _cd.classList.remove('on'); _cd.dataset.autoReading='0';
+  document.body.classList.remove('cardon');
+  if(typeof tip!=='undefined' && tip) tip.classList.remove('on');
+  selected=null; constellation=null; hover=null; _hoverPrev=null;
+  fitFootGap(true);
+}
+function bindShiyun(){
+  [].forEach.call(pinner.querySelectorAll('.syc .go'), function(g){
+    g.onclick=function(){
+      var i=parseInt(g.dataset.i,10);
+      closePanel();
+      setTimeout(function(){
+        try{
+          var d=window.__DUFU_DEBUG;
+          var po=d&&d.noisePoem?d.noisePoem(i):null;
+          if(po){ selectNoise(po); }
+        }catch(e){}
+      }, 460);
+    };
+  });
 }
 function bindChips(){
   [].forEach.call(pinner.querySelectorAll('.chip'),function(c){
@@ -4197,6 +4513,8 @@ function setReading(on){
     if(ft) ft.style.display='none';
     if(poem) poem.style.padding='18px 44px 26px';
     card.classList.add('reading');
+    _fsRefresh();                              // 同步排一次（rAF 在无绘制的截图里不跑）
+    setTimeout(_fsRefresh, 120);               // 再兜一次：字体/滚动条落定后复算
   } else {
     audDuck(false);
     card.style.width='';
@@ -4227,7 +4545,10 @@ function fitPoem(p){
   // 一律先落在侧边栏；全屏只由用户点"全屏"触发
 }
 window.addEventListener('resize', function(){
+  _footH=-1; fitFootGap(true);
   if(selected) fitPoem(selected);
+  clearTimeout(_fsBalT);
+  _fsBalT=setTimeout(function(){ if(readingOn) _fsRefresh(); }, 140);
 });
 
 /* --- 全屏：左教材式诗文，右解析 --- */
@@ -4247,6 +4568,9 @@ function anLookup(title){
   return null;
 }
 function analysisFor(p){
+  // 人工标注（data/annot）优先：按诗序号索引，同题诗各归各首，不再靠标题猜
+  var _AN=(window.ANNOT||{})[String(p.i)];
+  if(_AN && _AN.y){ return {y:_AN.y, w:_AN.w||'行迹不详', m:_AN.m||'', s:_AN.c||'推定', d:_AN.d||''}; }
   var a=anLookup(p.t);
   // 同题多首时，条目只对它标注的那一首负责；其余走统计兜底，不张冠李戴
   if(a && a.sig){
@@ -4257,9 +4581,11 @@ function analysisFor(p){
   var pn=(p.pd>=0&&PERIODS[p.pd])? (PERIODS[p.pd].n+' · '+PERIODS[p.pd].y) : '不详';
   var kw=(p.k||[]).slice(0,3).join('、')||'——';
   var cat=(CAT[p.d]||{}).label||'未定';
-  return {y:'推定：'+pn, w:'行迹不详', s:'统计',
+  var PHASE={0:'漫游吴越齐赵',1:'困守长安求仕',2:'战乱中奔命',3:'蜀中暂得安顿',4:'出峡后漂泊湖湘'};
+  return {y:'推定：'+pn, w:'行迹不详（此首尚无人工定年，地点待考）', s:'统计',
           m:'诗句里出现最多的意象词是「'+kw+'」，因此意象偏向「'+cat+'」一类（共命中 '+((p.k||[]).length)+' 个词典词）。'+
-            '这是统计口径，不是题材判定；同期他多在漂泊，可对照生平面板里的「'+pn+'」看他在哪里。'};
+            '这是按意象词统计推出来的时期（'+pn+'，约当'+(PHASE[p.pd]||'其生平某一段')+'），不是考据；'+
+            '「写作时间/地点」两栏目前是推定值，人工定年完成后会替换。'};
 }
 
 /* 体裁读法：教读者「这一首该怎么读」，由体裁定，不是复述内容 */
@@ -4279,83 +4605,78 @@ var FORM_NOTE={
 var FS_PG={i:0,total:0,title:''};
 function renderFull(p){
   var el=document.getElementById('c-full'); if(!el) return;
-  var _col=(window.COLLATION||{})[p.t];
-  var _pg0 = (FS_PG.total>0 && FS_PG.title===p.t) ? FS_PG.i : 0;
+  var _col=(window.COLLATION||{})[String(p.i)];
   var a=analysisFor(p);
-  var _cls = (p.L.length > 18) ? ' paged' : '';
-  var h='<div class="fs-left'+_cls+'">';
-  var _firstPage = (_pg0===0);
-  if(_firstPage){
-    h+='<div class="fs-t">'+esc(p.t)+'</div>';
-    h+='<div class="fs-a">唐 · 杜甫</div>';
-    h+='<div class="fs-rule"></div>';
-  }
-  var _cols = (window.innerWidth>=1700) ? 3 : ((window.innerWidth>=1000) ? 2 : 1);
-  var _lineH = 23*1.85;
-  var _avail = Math.max(240, window.innerHeight - 300);
-  var _rows = Math.max(4, Math.floor(_avail/_lineH));
-  var PER = _rows * _cols;
-  var _paged = p.L.length > 18;
-  var _total = _paged ? Math.ceil(p.L.length/PER) : 1;
-  var _pg = Math.min(FS_PG.total>0 && FS_PG.title===p.t ? FS_PG.i : 0, _total-1);
-  FS_PG={i:_pg, total:_total, title:p.t, per:PER, len:p.L.length};
-  var _from = _paged ? _pg*PER : 0;
-  var _to   = _paged ? Math.min(p.L.length, _from+PER) : p.L.length;
-  for(var i=_from;i<_to;i+=2){
-    h+='<div class="fs-cp">';
-    h+='<div class="fs-ln">'+esc(p.L[i])+'</div>';
-    if(p.L[i+1]!==undefined) h+='<div class="fs-ln">'+esc(p.L[i+1])+'</div>';
-    h+='</div>';
-  }
-  if(_paged){
-    h+='<div class="fs-pager">'+
-       '<span class="pgb'+(_pg<=0?' off':'')+'" data-d="-1" tabindex="0" role="button" aria-label="上一页">‹</span>'+
-       '<span class="pgc">'+(_pg+1)+' / '+_total+'</span>'+
-       '<span class="pgb'+(_pg>=_total-1?' off':'')+'" data-d="1" tabindex="0" role="button" aria-label="下一页">›</span></div>';
-  }
-  if(!_paged || _pg===_total-1){ h+='<div class="fs-note">'+(p.hot?'名篇 · ':'')+p.f+' · '+p.n+' 字</div>'; }
+  var _maxLen=0; for(var _z=0;_z<p.L.length;_z++){ if(p.L[_z].length>_maxLen) _maxLen=p.L[_z].length; }
+  var h='<div class="fs-left">';
+  h+='<div class="fs-t">'+esc(p.t)+(function(){var s=(window.SUB||{})[String(p.i)];return s?'<i class="submark">'+esc(s)+'</i>':'';})()+'</div>';
+  h+='<div class="fs-a">唐 · 杜甫</div>';
+  h+='<div class="fs-rule"></div>';
+  // 一排两句：两句一格，随栏宽定字号（整列排到底，不再分页）
+  h+='<div class="fs-poem" data-n="'+_maxLen+'">';
+  for(var i=0;i<p.L.length;i++){ h+='<div class="fs-ln">'+esc(p.L[i])+'</div>'; }
+  h+='</div>';
+  h+='<div class="fs-note">'+(p.hot?'名篇 · ':'')+p.f+' · '+p.n+' 字</div>';
+  h+='<div class="fs-lbody"></div>';
   h+='</div>';
   h+='<div class="fs-right">';
-  h+='<div class="fs-sec"><div class="fs-k">写作时间</div><div class="fs-v">'+esc(a.y)+'</div></div>';
-  h+='<div class="fs-sec"><div class="fs-k">写作地点</div><div class="fs-v">'+esc(a.w)+'</div></div>';
-  h+='<div class="fs-sec"><div class="fs-k">诗中之意</div><div class="fs-v">'+esc(a.m)+'</div></div>';
+  h+='<div class="fs-sec" data-side="l"><div class="fs-k">写作时间</div><div class="fs-v">'+esc(a.y)+'</div></div>';
+  h+='<div class="fs-sec" data-side="l"><div class="fs-k">写作地点</div><div class="fs-v">'+esc(a.w)+'</div></div>';
+  if(a.m) h+='<div class="fs-sec"><div class="fs-k">诗中之意</div><div class="fs-v">'+esc(a.m)+'</div></div>';
   // 机器同题：用同一题目让机器也写一首，和人的放在一起看
   try{
     var _seed=0; for(var _i=0;_i<p.t.length;_i++) _seed=(_seed*131+p.t.charCodeAt(_i))>>>0;
     var _mp=pcPoem(_seed);
-    var _yy=(window.YIYI||{})[p.t];
-    if(_yy && (function(){var sg=(window.GLOSS_SIG||{})[p.t];return !sg || ((p.L&&p.L[0])||'').indexOf(sg)===0;})()){
-      h+='<div class="fs-sec"><div class="fs-k">今译</div><div class="fs-v">'+esc(_yy)+'</div></div>';
+    var _an=annFor(p);
+    var _sgl=(window.GLOSS_SIG||{})[p.t];
+    var _okSig=!_sgl || ((p.L&&p.L[0])||'').indexOf(_sgl)===0;
+    var _anT=(window.ANNOT||{})[String(p.i)];
+    var _yy=(_anT&&_anT.t)||(_an&&_an.y)||(_okSig?(window.YIYI||{})[p.t]:'');
+    if(_yy){ h+='<div class="fs-sec"><div class="fs-k">今译</div><div class="fs-v">'+esc(_yy)+'</div></div>'; }
+    if(_an&&_an.m&&_an.m.length){
+      var _mh='<div class="fs-sec"><div class="fs-k">逐联串讲 · '+_an.m.length+' 段</div><div class="fs-v small">';
+      for(var _mi=0;_mi<_an.m.length;_mi++){ _mh+='<div style="margin:7px 0;line-height:2.1">'+esc(_an.m[_mi])+'</div>'; }
+      _mh+='</div></div>'; h+=_mh;
     }
-    var _gl=glossFor(p);
+    var _gl=(_an&&_an.g&&_an.g.length)?_an.g:glossFor(p);
+    var _gh='';
     if(_gl && _gl.length){
-      var _gh='<div class="fs-sec"><div class="fs-k">字注</div><div class="fs-v">';
+      _gh='<div class="fs-sec"><div class="fs-k">字注 · '+_gl.length+' 条</div><div class="fs-v an-g">';
       for(var _gi=0;_gi<_gl.length;_gi++){
-        _gh+='<div style="margin:3px 0"><b style="color:#c9a227;font-weight:400">'+esc(_gl[_gi][0])+'</b>　'+esc(_gl[_gi][1])+'</div>';
+        _gh+='<div class="an-row"><i>'+(_gi+1)+'</i><b>'+esc(_gl[_gi][0])+'</b><span>'+esc(_gl[_gi][1])+'</span></div>';
       }
       _gh+='</div></div>';
-      h+=_gh;
+    }
+    if(_an&&_an.a){ h+='<div class="fs-sec"><div class="fs-k">赏析</div><div class="fs-v small" style="line-height:2.15;color:#d2ccbe">'+esc(_an.a)+'</div></div>'; }
+    if(_an&&_an.b){ h+='<div class="fs-sec"><div class="fs-k">写作背景</div><div class="fs-v small">'+esc(_an.b)+'</div></div>'; }
+    if(_an&&_an.n&&_an.n.length){
+      h+='<div class="fs-sec"><div class="fs-k">名句</div><div class="fs-v">'+
+         _an.n.map(function(x){return '「'+esc(x)+'」';}).join('<br>')+'</div></div>';
     }
     var _fn=FORM_NOTE[p.f];
     if(_fn){
       h+='<div class="fs-sec"><div class="fs-k">读法 · '+esc(p.f)+'</div><div class="fs-v small">'+esc(_fn)+'</div></div>';
     }
+    h+=_gh;   // 字注移到读法之后：词条表更像附录，也让右栏从它开头读得通
     h+='<div class="fs-sec"><div class="fs-k">机器集句 · 非本题</div>'+
        '<div class="fs-v">'+esc(_mp.l.join('　'))+'</div>'+
        '<div class="fs-v small" style="margin-top:8px">机器按字级二元接龙生成，并不读题目——题名只用来取随机种子。'+
        '所以这不是对《'+esc(p.t)+'》的应答，只是一串从杜甫用字里滚出来的句子。</div></div>';
   }catch(e){}
 
-  if(_col){
-    h+='<div class="fs-sec"><div class="fs-k">校记</div><div class="fs-v small">'+esc(_col.join('；'))+
-       '　（据《杜诗详注》通行本校正）</div></div>';
+  var _cnote=(window.COLLATION_NOTES||{})[String(p.i)];
+  if(_col || _cnote){
+    h+='<div class="fs-sec"><div class="fs-k">校记</div><div class="fs-v small">'+
+       (_col?esc(_col.join('；')):'')+
+       (_cnote?((_col?'<br>':'')+esc(_cnote)):'')+
+       (_col?'　（以《全唐诗》为底本，参校《杜诗详注》）':'')+'</div></div>';
   }
   if((p.k||[]).length){
     h+='<div class="fs-sec"><div class="fs-k">区别性意象</div><div class="fs-v">'+esc(p.k.slice(0,6).join(' · '))+'</div></div>';
   }
   h+='<div class="fs-sec"><div class="fs-k">底本</div><div class="fs-v small">'+
-     ((window.COLLATION||{})[p.t] ? '正文据《杜诗详注》通行本校勘过（见上）。'
-                                   : '正文取自《全唐诗》的数字文本，本项目未逐字校勘——它可能带录入讹字，也不等于《全唐诗》原刻；引用请核纸本。')+
+     (((window.COLLATION||{})[String(p.i)] || (window.COLLATION_NOTES||{})[String(p.i)]) ? '正文以《全唐诗》为底本，参校《杜诗详注》等通行本（见上）。'
+                                          : '正文取自《全唐诗》的数字文本，尚未校出异文；它可能仍带录入讹字，也不等于《全唐诗》原刻；引用请核纸本。')+
      '</div></div>';
   h+='<div class="fs-sec"><div class="fs-k">'+(a.s==='考据'?'出处':'说明')+'</div><div class="fs-v small">'+
       (a.s==='考据' ? '时间与地点取学界通行说法；释义为本站所写。'
@@ -4363,11 +4684,102 @@ function renderFull(p){
                              : '时间由本项目的时期模型推定；释义由意象统计自动生成，仅供参照。'))+
      '</div></div>';
   h+='</div>';
-  el.classList.toggle('wide', (function(){var m=0;for(var z=0;z<p.L.length;z++){if(p.L[z].length>m)m=p.L[z].length;}return m>9;})());
+  // 图版：这一首的配图放大挂出来（窄屏置顶横幅 / 宽屏右列立轴）
+  h+='<div class="fs-art" id="fs-art" hidden>'+
+     '<div class="fg"></div>'+
+     '<div class="cap">图版 · 按诗题与意象生成 <i>／ 非古画原件</i></div>'+
+     '</div>';
   el.innerHTML=h;
+  (function(){
+    var box=document.getElementById('fs-art'); if(!box) return;
+    var fg=box.querySelector('.fg'); if(!fg) return;
+    var u=artUrls(p);
+    // 先离屏加载：没有图就让整块图版不出现，绝不在页面里留一个坏图
+    var im=document.createElement('img');
+    im.alt=esc(p.t)+' 的配图'; im.decoding='async';
+    im.onload=function(){ fg.appendChild(im); box.hidden=false; };
+    im.onerror=function(){
+      if(im.getAttribute('data-fb')!=='1'){ im.setAttribute('data-fb','1'); im.src=u.bulk; return; }
+      box.hidden=true;
+    };
+    im.src=u.curated||u.bulk;
+  })();
+  _fsScan(el);
+  if(readingOn){ _fsRefresh(); }
+}
+
+/* --- 整屏读 · 左右配平 ---
+   左栏只放诗；其余段落按阅读顺序切成前缀，前 k 段进左栏、其余进右栏，
+   k 取「两栏底边最齐」的那一刀。段落高度按各自栏宽实测（窄栏字号小一档、换行更多）。 */
+var _FS_SECS=[], _fsBalT=0;
+function _fsScan(el){
+  _FS_SECS=[];
+  var s=el.querySelectorAll('.fs-sec');
+  for(var i=0;i<s.length;i++){ s[i]._ord=i; _FS_SECS.push(s[i]); }
+}
+function _fsPut(box, el){
+  var ord=el._ord||0, kids=box.children;
+  for(var i=0;i<kids.length;i++){
+    var k=kids[i]; if(k===el) continue;
+    if((k._ord||0)>ord){ box.insertBefore(el,k); return; }
+  }
+  box.appendChild(el);
+}
+function fitFullPoem(){
+  var po=document.querySelector('#c-full .fs-poem'); if(!po) return;
+  var left=document.querySelector('#c-full .fs-left'); if(!left) return;
+  var w=left.getBoundingClientRect().width-(parseFloat(getComputedStyle(left).paddingRight)||0)-2;
+  if(w<=80) return;
+  var n=parseInt(po.getAttribute('data-n'),10)||5;
+  var sizes=[23,20,18,17.5,15], fs=15;
+  for(var i=0;i<sizes.length;i++){
+    if((2*n*sizes[i]*1.1 + 1.7*sizes[i] + 1)<=w){ fs=sizes[i]; break; }
+  }
+  po.style.setProperty('--pfs', fs+'px');
+}
+function _fsRefresh(){ fitFullPoem(); _fsBalanceNow(); }
+function _fsBalanceNow(){
+  var full=document.getElementById('c-full'); if(!full) return;
+  var L=full.querySelector('.fs-left'), R=full.querySelector('.fs-right'), LB=full.querySelector('.fs-lbody');
+  if(!L||!R||!LB) return;
+  var secs=_FS_SECS.filter(function(s){ return s.parentNode; });
+  var n=secs.length, i; if(!n) return;
+  var W=full.getBoundingClientRect().width; if(W<10) return;      // 不在整屏读
+  var _gt=getComputedStyle(full).gridTemplateColumns||'';
+  if(_gt.trim().split(/\s+/).length<2){                          // 单栏：全部按顺序排在诗后，不搬
+    for(i=0;i<n;i++) R.appendChild(secs[i]);
+    return;
+  }
+  var MB=30, hL=[], hR=[];
+  for(i=0;i<n;i++) R.appendChild(secs[i]);            // 全在右栏：量右栏宽度下的高度 + 空左栏（诗块）高度
+  for(i=0;i<n;i++) hR[i]=secs[i].getBoundingClientRect().height+MB;
+  var base=L.getBoundingClientRect().height;
+  for(i=0;i<n;i++) LB.appendChild(secs[i]);           // 全在左栏：量左栏宽度下的高度 + 空右栏高度
+  for(i=0;i<n;i++) hL[i]=secs[i].getBoundingClientRect().height+MB;
+  var rpad=R.getBoundingClientRect().height;
+  // 前缀切分：左栏吃前 k 段（诗 → …），右栏吃其余；k 从 0 扫到 n，取两栏高度差最小的那一刀。
+  // 用前缀而不是任意组合：阅读顺序永远是「左栏读完接右栏」，不会在兩栏之间来回跳。
+  var lh=base, rh=rpad, bestK=0, bestD=1e9, k;
+  for(i=0;i<n;i++) rh+=hR[i];
+  for(k=0;k<=n;k++){
+    var d=Math.abs(lh-rh);
+    if(d<bestD){ bestD=d; bestK=k; }
+    if(k<n){ lh+=hL[k]; rh-=hR[k]; }
+  }
+  for(i=0;i<n;i++){
+    if(i<bestK) LB.appendChild(secs[i]); else R.appendChild(secs[i]);
+  }
 }
 
 /* --- 依据：这首诗为什么是这些标签 --- */
+function annFor(p){
+  var G=window.GLOSS2;
+  if(!G||!p) return null;
+  var arr=G[p.t]; if(!arr||!arr.length) return null;
+  var sig=(p.L&&p.L[0])||'';
+  for(var i=0;i<arr.length;i++){ if(arr[i].s===sig) return arr[i]; }
+  return arr[0];
+}
 function glossFor(p){
   var G=(window.GLOSS||{})[p.t];
   if(!G) return null;
@@ -4378,7 +4790,7 @@ function glossFor(p){
 function renderEvidence(p){
   var el=document.getElementById('c-evd');
   if(!el) return;
-  var _col=(window.COLLATION||{})[p.t];
+  var _col=(window.COLLATION||{})[String(p.i)];
   var wc=p.wc||{}, arr=[];
   for(var k in wc){ arr.push([k, wc[k]]); }
   arr.sort(function(a,b){ return b[1]-a[1]; });
@@ -4404,7 +4816,7 @@ function renderEvidence(p){
     }
     el.innerHTML += '<div style="margin-top:8px;color:#a09a8c">字注 · '+_gh2+'</div>';
   }
-  var _col=(window.COLLATION||{})[p.t];
+  var _col=(window.COLLATION||{})[String(p.i)];
   if(_col){
     el.innerHTML += '<div style="margin-top:8px;color:#8a857a">校记 · 据《杜诗详注》校正 '+_col.length+
       ' 处：'+_col.slice(0,3).join('；')+(_col.length>3?' 等':'')+'</div>';
@@ -4521,9 +4933,9 @@ function renderAbout(){
 
   h+='<div class="era" style="max-width:820px"><div class="en">名篇层做了什么</div>'+
      '<div class="em">THE SCHOLARLY LAYER</div>'+
-     '<div class="ev"><span class="y">01</span><span>四十二首有人工解析（写作时间、地点、诗中之意），标题旁标「考据」或「推断」</span></div>'+
-     '<div class="ev"><span class="y">02</span><span>十二首有今译，二十二首有字注，十五首做过校勘（据《杜诗详注》通行本），校记留在诗卡与全屏</span></div>'+
-     '<div class="ev"><span class="y">03</span><span>其余一千四百余首走统计兜底，界面上明确标着「统计」——不是考据，是数出来的</span></div>'+
+     '<div class="ev"><span class="y">01</span><span>一千四百六十八首全部有写作时间、写作地点与依据，标题旁标「考据」（623 首）或「推定」（845 首）</span></div>'+
+     '<div class="ev"><span class="y">02</span><span>全部有大白话译文，共 26.6 万字；另有字注、逐联串讲与校记（据《杜诗详注》通行本），留在诗卡与全屏</span></div>'+
+     '<div class="ev"><span class="y">03</span><span>「推定」是据诗中的地名、人名、节令与事象推出来的，不是考订；这一栏请当参考，不要当定论</span></div>'+
      '<div class="ev"><span class="y">04</span><span>长诗（超过十八句）在整屏里分页阅读，每页句数按视口算</span></div>'+
      '</div>';
 
@@ -4737,6 +5149,52 @@ function bindFriends(){
   show(0);
 }
 
+/* --- 诗云 --- */
+function renderShiyun(){
+  var G=window.SHIYUN_GOOD;
+  if(!G||!G.items) return '<div class="pnum">05 / CLOUD</div><div class="phead">诗云</div><div class="pintro">数据加载中</div>';
+  var items=G.items.slice();
+  var k1=items.filter(function(x){return x.k===1;});
+  var k2=items.filter(function(x){return x.k!==1;});
+  var h='<div class="pnum">05 / CLOUD OF POEMS</div>';
+  h+='<div class="phead">诗云</div>';
+  h+='<div class="pintro">天幕底下那些暗到几乎看不见的点，是机器写的诗：两万首，全部由杜甫自己的四千二百六十八个字，按二阶马尔可夫链拼成。'+
+     '它们本来只是噪点。我们把两万首全部过了一遍——先用程序筛出「每一句都曾是杜甫原句」的八百五十二首，再逐首细读。'+
+     '真正能读成一首的，只有下面这几十首。</div>';
+  h+='<div class="hr"></div>';
+  h+='<div class="systat">'+
+     '<div><div class="n">20,000<em>首</em></div><div class="k">机器伪诗总数</div></div>'+
+     '<div><div class="n">852<em>首</em></div><div class="k">四句皆杜诗原句</div></div>'+
+     '<div><div class="n">4,504<em>首</em></div><div class="k">至少三句是原句</div></div>'+
+     '<div><div class="n">0<em>首</em></div><div class="k">能复现整首杜诗</div></div>'+
+     '<div><div class="n">'+items.length+'<em>首</em></div><div class="k">读得下去</div></div>'+
+     '</div>';
+  function card(x,idx){
+    var f=[]; (x.f||[]).forEach(function(y){ if(y && f.indexOf(y)<0) f.push(y); });
+    var hh='<div class="syc" data-i="'+x.i+'">'+
+      '<div class="no">NOISE '+String(x.i+1).padStart(5,'0')+'</div>'+
+      '<div class="tt">《'+esc(x.t)+'》<span style="color:#6f6b62;font-size:11px;letter-spacing:.14em;margin-left:12px">机器拟题</span></div>'+
+      '<div class="ll">'+(x.l||[]).map(function(L){return '<span>'+esc(L)+'</span>';}).join('')+'</div>';
+    if(x.c) hh+='<div class="cc">'+esc(x.c)+'</div>';
+    if(f.length) hh+='<div class="ff">其中 '+f.length+' 句曾是杜甫原句：'+f.map(function(t){return '《'+esc(t)+'》';}).join('、')+'</div>';
+    hh+='<div class="go" data-i="'+x.i+'">在星海中找到这一粒 ›</div></div>';
+    return hh;
+  }
+  h+='<div class="syh">一 · 它自己站住了<em>四句之间没有断裂，读下去像一个场景、一件事、一个人。共 '+k1.length+' 首。</em></div>';
+  k1.forEach(function(x,i){ h+=card(x,i); });
+  h+='<div class="syh">二 · 只有一句站住了<em>其余三句散架，可那一句忽然有了光。共 '+k2.length+' 首。</em></div>';
+  k2.forEach(function(x,i){ h+=card(x,i); });
+  h+='<div class="syessay">'+
+     '<div class="en-h">ON MACHINE AND POETRY</div>'+
+     '<p>这些句子里的每一个字都是杜甫写过的，每一种搭配也都在他的诗里出现过。机器没有发明任何东西——它只是把一个人一生的词汇打散，再按统计重排一遍。所以严格地说，这里没有「AI 写的诗」，只有被随机重排过的杜甫。</p>'+
+     '<p>可是「世乱敢求安」这五个字连在一起的时候，人会停一下。机器不知道「敢」在这里是反问，不知道安史之乱里一个父亲抱着孩子逃难是什么滋味。它只是恰好把「世乱」和「敢求安」放在了一处。而这一放，意思自己长出来了。</p>'+
+     '<p>我不认为这是机器的功劳。诗的重量来自那些字在一个人身上磨过的痕迹：杜甫写「儿童相识尽」，是因为他真的回到故乡，发现认得的孩子都已经老了、死了。这份重量无法复制，机器连「儿童」是什么都不知道。</p>'+
+     '<p>但我也不同意另一种轻慢——说机器拼出来的东西「完全无意义」。这两万首里，绝大多数确实是垃圾：四句各说各话，语法断裂，读三行就散。可总有那么几十首，你读下去会不自觉地把它们连成一个场景：补过的衣服短到膝盖，月亮早沉了，世道乱成这样，还敢求什么安稳。那一刻的震动不是「机器会写诗了」，而是「诗比我们以为的更结实」——它甚至扛得住一次彻底的随机重排。</p>'+
+     '<p>所以我愿意把这些偶然站住的句子单独收在这里，编上号，让它们能被找到、被读。不是为了证明机器有感情，恰恰相反：是为了让人看清，感情在哪一边。机器给出的是排列，人给出的是那一下停顿。</p>'+
+     '<p>如果有一天机器真的写出了让人落泪的句子，我想那也不是因为它懂了什么，而是因为读的人懂。诗从来是两个人的事：一个写，一个读。机器只能站在写的那一头，而且它不知道自己写了什么。<b>读的这一头，永远是我们。</b></p>'+
+     '</div>';
+  return h;
+}
 /* --- 评点 --- */
 function renderCrit(){
   var C=META.critics;
@@ -4905,7 +5363,7 @@ setTimeout(bootReady, 6000);   // 兜底：任何情况下 6 秒都要进去
     {t:'点一颗星，读一首诗',
      d:'镜头会飞过去，展开诗卡：画、竖排原诗、意象依据、交游关系。',hi:null},
     {t:'检索意象',
-     d:'在右上角输入「月」「战」「秋」，命中的星辰会整片亮起来，彼此连线。',hi:'#search'},
+     d:'按 / 键唤出检索框，输入「月」「战」「秋」，命中的星辰会整片亮起来，彼此连线。',hi:'#search'},
     {t:'底部的工具条',
      d:'着色（意象 / 时期）· 诗云（两万首机器伪诗）· 生涯（五期依次点亮）· 图例。',hi:'#foot'},
     {t:'按 W A S D，飞进星海',
@@ -5028,7 +5486,8 @@ window.__DUFU_DEBUG={
   state:function(){ return {q:query, sel:selected?selected.t:null, mode:viewMode, hl:periodHL}; },
   setPeriod:function(i){ setPeriod(i); render(0); },
   selectAndFly:function(t){
-    var p=pts.filter(function(x){return x.t===t;})[0];
+    var p=(typeof t==='number')?pts.filter(function(x){return x.i===t;})[0]
+          :pts.filter(function(x){return x.t===t;})[0];
     if(!p) return false;
     select(p);
     if(fly){ cam.yaw=fly.yaw; cam.pitch=fly.pitch; cam.zoom=fly.zoom; fly=null; }
@@ -5037,6 +5496,18 @@ window.__DUFU_DEBUG={
   },
   count:function(){return pts.length;},
   pc:function(){return PC?{n:PC.n}:null;},
+  noiseSeed:function(i){ return PC?PC.seed[i]:null; },
+  noiseCount:function(){ return PC?PC.n:0; },
+  noisePoem:function(i){
+    if(!PC) return null;
+    var po=pcPoem(PC.seed[i]); po.idx=i;
+    if(PCG) po.dir={x:PCG.x[i],y:PCG.y[i],z:PCG.z[i]};
+    return po;
+  },
+  showNoise:function(i){
+    var po=window.__DUFU_DEBUG.noisePoem(i); if(!po) return false;
+    selectNoise(po); return true;
+  },
   cam:function(){return cam;},
   bench2:function(){
     var c=document.createElement('canvas'); c.width=W; c.height=H;
