@@ -1,36 +1,13 @@
-# —— 生成物与大件不入库 ——
-*.zip
-杜诗星海.html
-web/art/
-docs/*.docx
-data/build/
-data/raw/
-
-# 交付目录：只收小件（正式作品 html / 两份说明 / 数据表 / 说明），
-# 280 MB 的 05_全图库版 与 zip 走 Release，不进版本库
-交付/*
-!交付/00_交付清单.md
-!交付/01_作品_杜诗星海.html
-!交付/02_技术方法说明.docx
-!交付/03_经典文本关联说明.docx
-!交付/04_数据说明/
-!交付/使用说明.txt
-
-# 运行/截图产生的临时物
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.ico
+# 完整项目资源入库，大文件使用 Git LFS；只忽略缓存及临时资料。
+web/_*
+web/art/tmp/
 *_prof*/
 __pycache__/
 *.pyc
 _tmp_*
 _shot_*
-web/_*
-
-# 已废弃的目录（2026-10-22 整理时删除，勿再建）
-work/
-refs/
-迭代/
-作品_全图库版/
+~$*
+Thumbs.db
+.DS_Store
+.env
+.env.*

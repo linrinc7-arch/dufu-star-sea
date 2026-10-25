@@ -6,7 +6,24 @@
 
 ---
 
-## 一、要交的东西
+## 下载与使用
+
+完整下载需要 Git 和 Git LFS：
+
+```bash
+git lfs install
+git clone https://github.com/linrinc7-arch/dufu-star-sea.git
+cd dufu-star-sea
+git lfs pull
+```
+
+已有克隆先执行 `git pull --ff-only`，再执行 `git lfs pull`。如果图片或 ZIP 内容只有几行 LFS 指针文字，说明真实资源尚未下载。
+打开 `交付/01_作品_杜诗星海.html` 使用单文件版；打开 `交付/05_全图库版/index.html` 使用完整配图版，必须保留其脚本和 art 子目录。
+也可下载仓库中的 `杜诗星海_交付.zip` 实际文件，完整解压后打开作品。详细操作见 `交付/使用说明.txt`。
+
+GitHub 文件列表右侧显示该文件或目录的最近提交说明，并非固定简介；各目录 README 提供中文用途与操作说明。
+
+## 一、交付内容
 
 ```
 交付/                        ← 提交目录（同时打成 杜诗星海_交付.zip）
@@ -17,7 +34,7 @@
   04_数据说明/               4 张 CSV + README，可独立复核
   使用说明.txt               操作说明
 
-作品_全图库版/               ← 本地完整图库版：1,468 首各配一图，约 280 MB（选交，不进 zip）
+交付/05_全图库版/               ← 本地完整图库版：1,468 首各配一图，约 280 MB（完整打包时包含在 ZIP 中）
 ```
 
 ## 二、工程结构
@@ -27,7 +44,7 @@ web/            源码：index.html 全部逻辑（单文件版由它内联打�
                 data.js 语料/坐标 · gloss2.js 全量注释 · annot.js 人工笺注
                 imagery.js 意象词典（23 类 575 词） · collation.js 校记
                 life.js + life_data.js 生平面板与行迹图 · shiyun_good.js 诗云甄选
-                art/opt（精选 30 幅，内联进单文件） · art/all（全量 1,468 幅）
+                art/opt（精选 31 幅，内联进单文件） · art/all（全量 1,468 幅）
 pipeline/       构建与检查
                 01_build_corpus → 02_features → 02b_periods → 03_export_web
                 04_bundle（打单文件） · 07_package（出交付目录 + zip）
@@ -42,7 +59,7 @@ DESIGN.md       视觉与交互设计说明
 
 ```bash
 python pipeline/04_bundle.py    # 单文件 → 根目录 杜诗星海.html
-python pipeline/07_package.py   # 出 交付/ 与 作品_全图库版/，并打包 zip
+python pipeline/07_package.py --full # 出 交付/ 与 交付/05_全图库版/，并打包 zip
 python pipeline/08_smoke.py     # 冒烟：headless 打开、点诗、确认诗卡出现
 ```
 
@@ -61,3 +78,5 @@ python pipeline/08_smoke.py     # 冒烟：headless 打开、点诗、确认诗�
 ## 五、历史
 
 迭代与决策记录见 `项目记录.md`；逐版差异见 `git log`。
+
+打包注意：`07_package.py --full` 会重建交付目录；不加 --full 会生成精简包。修改说明时也需修改生成脚本，避免打包时还原旧文字。冒烟检查依赖 Windows Edge，不能代替全功能人工验收。
